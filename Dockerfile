@@ -5,3 +5,5 @@ WORKDIR /transpo
 ADD Gemfile /transpo/Gemfile
 RUN bundle install
 ADD . /transpo
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
