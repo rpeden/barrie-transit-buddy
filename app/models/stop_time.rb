@@ -3,9 +3,16 @@ class StopTime < ActiveRecord::Base
 	has_one :trip
   validates :stop_id, :trip_id, :departure_time, :presence => true
 
-	def self.find_same_day(day_type, stop_id,current_time,future_time)
+	def self.find_same_day(day_type, stop_id,current_time,future_time, route_id=nil)
     
-    	self.find_by_sql ["select distinct st.departure_time, tr.trip_headsign, rt.route_short_name
+      min = 0
+      max = 100000
+
+      if route_id != nil then
+        min = route_id
+        max = route_id
+      end
+    	self.find_by_sql ["select distinct st.departure_time, rt.route_id,rt.route_long_name, rt.route_short_name
                                from stop_times as st inner join trips as tr
                                on st.trip_id = tr.trip_id
                                inner join routes as rt
@@ -13,14 +20,23 @@ class StopTime < ActiveRecord::Base
                                where st.stop_id = ?
                                and (st.departure_time >= ?)
                                and (tr.service_id like ?)
+                               and (rt.route_id between ? and ?)
                                order by st.departure_time asc
                                limit 15",
-                               stop_id, current_time, "%#{day_type}%"]
+                               stop_id, current_time, "%#{day_type}%", min, max]
   	end
 
-  	def self.find_across_days(day_type, stop_id,current_time,future_time)
+  	def self.find_across_days(day_type, stop_id,current_time,future_time, route_id=nil)
     
-    self.find_by_sql ["select distinct st.departure_time, tr.trip_headsign, rt.route_short_name
+    min = 0
+    max = 100000
+
+    if route_id != nil then
+        min = route_id
+        max = route_id
+    end
+
+    self.find_by_sql ["select distinct st.departure_time, rt.route_id ,rt.route_long_name, rt.route_short_name
                                from stop_times as st inner join trips as tr
                                on st.trip_id = tr.trip_id
                                inner join routes as rt
@@ -28,10 +44,11 @@ class StopTime < ActiveRecord::Base
                                where st.stop_id = ?
                                and ((st.departure_time between ? and ?)
                                or (st.departure_time between '00:00:01' and ?))
-                               and (tr.service_id = ?)
+                               and (tr.service_id like ?)
+                               and (rt.route_id between ? and ?)
                                order by st.departure_time asc
-                               limit 50",
-                               stop_id, current_time, "11:59:59", future_time, "%#{day_type}%"]
+                               limit 15",
+                               stop_id, current_time, "11:59:59", future_time, "%#{day_type}%", min, max]
     
   	end
   

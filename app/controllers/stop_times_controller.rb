@@ -8,11 +8,12 @@ def upcoming_buses
     day_type = compute_day()
     stop_times_array = Array.new
     
-    stoptimes = get_stops(day_type,params[:stop_id],current_time,future_time)
+    stoptimes = get_stops(day_type,params[:stop_id],current_time,future_time, params[:route_id])
     stoptimes.each do |row|
-           stop_times_array.push(:route_short_name => row.route_short_name, \
-                                 :departure_time =>  row.departure_time.strftime("%H:%M:%S"), \
-                                 :trip_headsign => row.trip_headsign)
+           stop_times_array.push(:route_short_name => row.route_short_name, 
+                                 :route_id => row.route_id,
+                                 :departure_time =>  row.departure_time.strftime("%H:%M:%S"), 
+                                 :trip_headsign => row.route_long_name)
     end
     
     render :text => stop_times_array.to_json
@@ -21,9 +22,9 @@ def upcoming_buses
 
 private  
 
-  def get_stops(day_type, stop_id, current_time, future_time)
+  def get_stops(day_type, stop_id, current_time, future_time, route_id)
       if (future_time_is_today?) then
-          return StopTime.find_same_day(day_type,stop_id,current_time,future_time)  
+          return StopTime.find_same_day(day_type,stop_id,current_time,future_time, params[:route_id])  
       else
           return StopTime.find_across_days(day_type,stop_id,current_time,future_time)    
       end  
@@ -31,11 +32,11 @@ private
   
   def compute_day
     if (Time.now.wday < 6)
-      return "Weekday"
+      return 1
     elsif (Time.now.wday == 6)
-      return "Saturday"
+      return 2
     elsif (Time.now.wday == 7)
-      return "Sunday"  
+      return 3 
     end
   end
   

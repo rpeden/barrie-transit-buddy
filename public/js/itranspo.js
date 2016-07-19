@@ -6,8 +6,8 @@
   Map = {
     
     //defaults in case geolocation doesn't work
-    latitude : 45.423415,
-    longitude : -75.698379,
+    latitude : 44.389192,
+    longitude : -79.688208,
     map : " ",
     markersArray : [],
     

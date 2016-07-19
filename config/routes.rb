@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   root 'home#index'
   get 'stops' => 'stops#fetch_stops'
+  get 'stops/:stopId/routes' => 'stops#routes_for_stop'
   get 'stop_times/:stop_id' => 'stop_times#upcoming_buses'
   get 'home' => 'home#index'
   get 'mobile' => "mobile#index"
