@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   root 'home#index'
+  get 'main' => 'home#main'
   get 'stops' => 'stops#fetch_stops'
   get 'stops/:stopId/routes' => 'stops#routes_for_stop'
   get 'stop_times/:stop_id' => 'stop_times#upcoming_buses'

@@ -5,6 +5,9 @@ class HomeController < ApplicationController
 		
 	end
 
+	def main
+
+	end
 private
 	
 	def check_mobile
