@@ -12,7 +12,7 @@ class StopTime < ActiveRecord::Base
         min = route_id
         max = route_id
       end
-    	self.find_by_sql ["select distinct st.departure_time, rt.route_id,rt.route_long_name, rt.route_short_name
+    	self.find_by_sql ["select distinct st.departure_time, tr.trip_id, rt.route_id,rt.route_long_name, rt.route_short_name
                                from stop_times as st inner join trips as tr
                                on st.trip_id = tr.trip_id
                                inner join routes as rt
@@ -36,7 +36,7 @@ class StopTime < ActiveRecord::Base
         max = route_id
     end
 
-    self.find_by_sql ["select distinct st.departure_time, rt.route_id ,rt.route_long_name, rt.route_short_name
+    self.find_by_sql ["select distinct st.departure_time, tr.trip_id, rt.route_id ,rt.route_long_name, rt.route_short_name
                                from stop_times as st inner join trips as tr
                                on st.trip_id = tr.trip_id
                                inner join routes as rt

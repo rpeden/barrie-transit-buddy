@@ -12,6 +12,7 @@ def upcoming_buses
     stoptimes.each do |row|
            stop_times_array.push(:route_short_name => row.route_short_name, 
                                  :route_id => row.route_id,
+                                 :trip_id => row.trip_id,
                                  :departure_time =>  row.departure_time.strftime("%H:%M:%S"), 
                                  :trip_headsign => row.route_long_name)
     end

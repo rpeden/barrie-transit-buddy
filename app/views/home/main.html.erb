@@ -1,3 +1,41 @@
 <div>
-    <h3>it works!</h3>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://localhost:5000');
+        $(function() {
+            $('#go').click(function(){
+                var stopNum = $('#stopEntry').val();
+                $.get('/stops/' + stopNum + '/routes', function(data){
+                    var routes = JSON.parse(data);
+                    var routeHtml = "";
+                    routes.forEach(function(el){
+                        routeHtml += "<div class='route' data-routeid='" + el.route_id + "'>" + el.route_id + " " + el.route_long_name + "</div>";
+                    });
+                    $('#resultList').html(routeHtml);
+                    $('.route').click(function(){
+                        var routeId = $(this).attr('data-routeid');
+                        var stopNum = $('#stopEntry').val();
+                        $.get("/stop_times/" + stopNum + "?route_id=" + routeId, function(data){    
+                            var buses = JSON.parse(data);
+                            var busesHtml = "";
+                            buses.forEach(function(el) {
+                                busesHtml += "<div class='bus' tripId='" + el.trip_id + "'>" + el.trip_id + " " + el.departure_time + "</div>"
+                            });
+                            $('#busList').html(busesHtml);  
+                            var firstId = buses[0].trip_id;
+                            socket.on(stopNum + "/" + firstId, function(data){
+                                console.log(data);
+                            });                      
+                        });          
+                    });
+                });
+            });
+        });
+    </script>
+    <h3>Enter a stop number:</h3>
+    <input type="text" id="stopEntry" />
+
+    <button id="go">GO</button>
+    <div id="resultList"> </div>
+    <div id="busList"></div>
 </div>
