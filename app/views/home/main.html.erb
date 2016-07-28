@@ -1,5 +1,5 @@
 <div>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script type="text/javascript">
         var socket = io.connect('http://localhost:5000');
         $(function() {
@@ -23,6 +23,7 @@
                             });
                             $('#busList').html(busesHtml);  
                             var firstId = buses[0].trip_id;
+                            socket.emit('stop-listen', stopNum);
                             socket.on(stopNum + "/" + firstId, function(data){
                                 console.log(data);
                             });                      
