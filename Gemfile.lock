@@ -59,6 +59,7 @@ GEM
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
     jdbc-mysql (5.1.38)
+    jdbc-sqlite3 (3.8.11.2)
     jquery-rails (4.0.5)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
@@ -152,6 +153,7 @@ DEPENDENCIES
   delorean
   jbuilder (~> 2.0)
   jdbc-mysql
+  jdbc-sqlite3
   jquery-rails
   mysql2
   rails (= 4.2.4)

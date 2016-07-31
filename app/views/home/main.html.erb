@@ -1,7 +1,26 @@
 <div>
     <script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type ="text/javascript" src="/js/itranspo_desktop.js"></script>
     <script type="text/javascript">
         var socket = io.connect('http://localhost:5000');
+        var locationMarkers = [];
+        socket.on('locations', function(data){
+            locationMarkers.forEach((marker) => {
+                marker.setMap(null);
+            });
+            locationMarkers = [];
+            console.log(data);
+            var locations = JSON.parse(data);
+            locations.forEach(function(location){
+                var busLatLng = new google.maps.LatLng(location.lat, location.lon);
+                var marker = new google.maps.Marker ({
+                                position: busLatLng,
+                                map: Map.map,
+                                title: "Trip " + location.tripId
+                });
+                locationMarkers.push(marker);
+            })
+        })
         $(function() {
             $('#go').click(function(){
                 var stopNum = $('#stopEntry').val();
@@ -33,10 +52,14 @@
             });
         });
     </script>
+    <div id="map_canvas" style="width: 700px; height: 500px;"></div>
     <h3>Enter a stop number:</h3>
     <input type="text" id="stopEntry" />
 
     <button id="go">GO</button>
     <div id="resultList"> </div>
     <div id="busList"></div>
+    <script type="text/javascript">
+		Map.createmap();
+	</script>
 </div>
