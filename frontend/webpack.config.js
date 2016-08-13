@@ -3,7 +3,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: './src/app.jsx',
     output: {
-        path: './bin',
+        path: '../public/js',
         filename: 'app.bundle.js',
     },
     module: {
@@ -11,9 +11,13 @@ module.exports = {
             test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel-loader',
+            query:
+              {
+                presets:['es2015','stage-1','react']
+              }
         } ]
     },
-    plugins: [
+    /*plugins: [
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
@@ -22,5 +26,5 @@ module.exports = {
                 comments: false,
             },
         }),
-    ]
+    ]*/
 }

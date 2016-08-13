@@ -114,7 +114,7 @@
 	    );
 	};
 
-	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('hello'));
+	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
 
 	console.log(hello);
 
