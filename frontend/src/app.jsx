@@ -8,10 +8,19 @@ import AppBar from 'material-ui/AppBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TransitMap from './TransitMap.jsx';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import { indigo500,indigo700 } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import _ from 'lodash';
 
 injectTapEventPlugin();
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: indigo500,
+    primary2Color: indigo700,
+  },
+});
 
 class RouteChooser extends HeightResizingComponent {
 
@@ -92,7 +101,7 @@ const Container = () => {
 }
 
 const App = () => (
-    <MuiThemeProvider>
+    <MuiThemeProvider muiTheme={muiTheme}>
         <Container />
     </MuiThemeProvider>
 );

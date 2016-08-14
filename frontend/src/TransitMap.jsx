@@ -7,8 +7,8 @@ class TransitMap extends Component {
   state = {
     markers: [{
       position: {
-        lat: 25.0112183,
-        lng: 121.52067570000001,
+        lat: 44.389,
+        lng: -79.688,
       },
       key: `Taiwan`,
       defaultAnimation: 2,
@@ -93,8 +93,8 @@ class TransitMap extends Component {
         googleMapElement={
           <GoogleMap
             ref={(map) => (this._googleMapComponent = map) && console.log(map.getZoom())}
-            defaultZoom={3}
-            defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+            defaultZoom={12}
+            defaultCenter={{ lat: 44.389, lng: -79.688 }}
             onClick={::this.handleMapClick}
           >
             {this.state.markers.map((marker, index) => {
