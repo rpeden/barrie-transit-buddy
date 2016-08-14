@@ -11,5 +11,5 @@
 /log/*
 !/log/.keep
 /tmp
-
+public/js/app.bundle.js
 *.swp

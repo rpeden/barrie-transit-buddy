@@ -2,10 +2,10 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.4'
-# Use postgresql as the database for Active Record
-#gem 'mysql2', platform: :ruby
-#gem 'jdbc-mysql', platform: :jruby
+gem 'rails', '4.2.4'# Use postgresql as the database for Active Record
+
+gem 'sqlite3', platform: :ruby
+gem 'jdbc-mysql', platform: :jruby
 gem 'activerecord-jdbc-adapter', platform: :jruby
 gem 'jdbc-sqlite3', platform: :jruby
 gem 'sqlite3', platform: :ruby
@@ -50,4 +50,3 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-
