@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'main' => 'home#main'
   get 'transit' => 'transit#index'
+  get 'routes' => 'routes#get_all_routes'
   get 'stops' => 'stops#fetch_stops'
   get 'stops/:stopId/routes' => 'stops#routes_for_stop'
   get 'stop_times/:stop_id' => 'stop_times#upcoming_buses'

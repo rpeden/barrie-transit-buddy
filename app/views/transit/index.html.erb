@@ -1,47 +1,28 @@
-<script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
+<!--<script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
-<script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+<script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>-->
 <style type='text/css'>
-    .app-container {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        align-content: stretch;
-        height: 100%;
-        width: 100%;
+    html, body {
+      padding: 0px;
+      margin: 0px;
+      height: 100%;
     }
-    .app-body {
+    .app {
         display: flex;
         flex-direction: row;
         align-items: stretch;
         align-content: stretch;
         width: 100%;
     }
-    .app {
-        width: 325px;
-    }
+
 </style>
-<div class="app-container mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header app-header">
-    <div class="mdl-layout__header-row">
-      <!-- Title -->
-      <span class="mdl-layout-title">Barrie Transit Buddy</span>
-      <!-- Add spacer, to align navigation to the right -->
-      <div class="mdl-layout-spacer"></div>
-      <!-- Navigation. We hide it in small screens. -->
-      <nav class="mdl-navigation mdl-layout--large-screen-only">
-        <!--<a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>-->
-      </nav>
-    </div>
-  </header>
     <div class="app-body">
     <div id="app" ></div>
-    <div id="map" style="height: 600px; width: 10000px; z-index: 1"></div>
+    <div id="map"></div>
     </div>
+    <script type ="text/javascript" src="/js/app.bundle.js"></script>
+
 </div>
 
 </div>

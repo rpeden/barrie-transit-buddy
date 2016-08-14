@@ -3,7 +3,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: './src/app.jsx',
     output: {
-        path: './bin',
+        path: '../public/js',
         filename: 'app.bundle.js',
     },
     module: {
@@ -13,7 +13,7 @@ module.exports = {
             loader: 'babel-loader',
         } ]
     },
-    plugins: [
+    /*plugins: [
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
@@ -22,5 +22,5 @@ module.exports = {
                 comments: false,
             },
         }),
-    ]
+    ]*/
 }
