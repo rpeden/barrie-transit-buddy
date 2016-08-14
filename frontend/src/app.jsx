@@ -6,138 +6,13 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
+import TransitMap from './TransitMap.jsx';
+import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import _ from 'lodash';
 
 injectTapEventPlugin();
 
-function Abc(something) {
-
-}
-
-class HeightResizingComponent extends Component {
-
-  constructor(props, context) {
-    super(props, context);
-    this.handleResize = _.throttle(::this.handleResize, 500);
-  }
-  handleResize(e) {
-    this.setState({height: window.innerHeight - 64 + "px"});
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', ::this.handleResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', ::this.handleResize);
-  }
-}
-
-class TransitMap extends Component {
-  state = {
-    markers: [{
-      position: {
-        lat: 25.0112183,
-        lng: 121.52067570000001,
-      },
-      key: `Taiwan`,
-      defaultAnimation: 2,
-    }],
-  }
-
-  constructor(props, context) {
-    super(props, context);
-    this.handleWindowResize = _.throttle(::this.handleWindowResize, 500);
-  }
-
-  componentDidMount() {
-    window.addEventListener(`resize`, this.handleWindowResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener(`resize`, this.handleWindowResize);
-  }
-
-  handleWindowResize() {
-    console.log(`handleWindowResize`, this._googleMapComponent);
-    triggerEvent(this._googleMapComponent, `resize`);
-  }
-
-  /*
-   * This is called when you click on the map.
-   * Go and try click now.
-   */
-  handleMapClick(event) {
-    let { markers } = this.state;
-    markers = update(markers, {
-      $push: [
-        {
-          position: event.latLng,
-          defaultAnimation: 2,
-          key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
-        },
-      ],
-    });
-    this.setState({ markers });
-
-    if (markers.length === 3) {
-      this.props.toast(
-        `Right click on the marker to remove it`,
-        `Also check the code!`
-      );
-    }
-  }
-
-  handleMarkerRightclick(index, event) {
-    /*
-     * All you modify is data, and the view is driven by data.
-     * This is so called data-driven-development. (And yes, it's now in
-     * web front end and even with google maps API.)
-     */
-    let { markers } = this.state;
-    markers = update(markers, {
-      $splice: [
-        [index, 1],
-      ],
-    });
-    this.setState({ markers });
-  }
-
-  render() {
-    return (
-      <GoogleMapLoader
-        containerElement={
-          <div
-            {...this.props}
-            style={{
-              height: `100%`,
-              width: '500px'
-            }}
-          /> }
-        googleMapElement={
-          <GoogleMap
-            ref={(map) => (this._googleMapComponent = map) && console.log(map.getZoom())}
-            defaultZoom={3}
-            defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
-            onClick={::this.handleMapClick}
-          >
-            {this.state.markers.map((marker, index) => {
-              return (
-                <Marker
-                  {...marker}
-                  onRightclick={this.handleMarkerRightclick.bind(this, index)}
-                />
-              );
-            })}
-          </GoogleMap>
-        }
-      />
-    );
-  }
-}
-@Abc
 class RouteChooser extends HeightResizingComponent {
 
   constructor(props, context) {
@@ -159,6 +34,8 @@ class RouteChooser extends HeightResizingComponent {
       const divStyle = {
         width: '300px',
         height: this.state.height,
+        boxShadow: '5px 0px 11px -7px rgba(0,0,0,0.50)',
+        zIndex: 10,
         backgroundColor: 'white',
         color: 'black',
       }
@@ -208,9 +85,7 @@ const Container = () => {
       <Header />
       <div style={style}>
         <RouteChooser />
-        <div style={{height: "500px", width:"500px"}}>
-          <TransitMap />
-        </div>
+        <TransitMap />
       </div>
     </div>
   )
