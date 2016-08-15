@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import React from 'react';
 import _ from 'lodash';
 
 class HeightResizingComponent extends Component {
