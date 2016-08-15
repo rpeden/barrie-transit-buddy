@@ -11,7 +11,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import eventBus from './EventBus.js'
 import theme from './utils/Theme.js'
 
-
 injectTapEventPlugin();
 
 class Header extends Component {
