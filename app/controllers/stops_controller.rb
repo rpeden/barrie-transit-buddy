@@ -15,10 +15,16 @@ def fetch_stops
    render :text => @stops.to_json
 end
 
-def routes_for_stop 
+def routes_for_stop
     @routes = Route.find_routes_for_stop(params[:stopId])
 
     render :text => @routes.to_json
+end
+
+def stops_for_route
+    @stops = Route.find_stops_for_route(params[:routeId])
+
+    render :text => @stops.to_json
 end
 
 end

@@ -13,7 +13,7 @@ class RouteSelector extends HeightResizingComponent {
 
     let routes = window.routes.map((el) => {
       let text = `${el.route_short_name} ${el.route_long_name}`;
-      return <MenuItem value={text} key={el.id} primaryText={text} />
+      return <MenuItem value={text} routeId={el.route_id} key={el.id} primaryText={text} />
     });
 
     this.state = {
