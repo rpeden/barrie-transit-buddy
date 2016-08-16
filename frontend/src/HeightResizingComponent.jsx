@@ -8,8 +8,10 @@ class HeightResizingComponent extends Component {
     super(props, context);
     this.handleResize = _.throttle(::this.handleResize, 500);
   }
+  
   handleResize(e) {
-    this.setState({height: window.innerHeight - 64 + "px"});
+    this.setState({height: window.innerHeight - 64 + "px",
+                   maxHeight: window.innerHeight - 54 + "px"});
   }
 
   componentDidMount() {
