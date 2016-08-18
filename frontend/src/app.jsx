@@ -8,6 +8,7 @@ import TransitMap from './TransitMap.jsx';
 import RouteSelector from './RouteSelector.jsx';
 import StopSelector from './StopSelector.jsx';
 import StopArrivalTimes from './StopArrivalTimes.jsx';
+import { Router, Route, hashHistory } from 'react-router'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import eventBus from './EventBus.js'
@@ -33,7 +34,11 @@ const Container = () => {
     <div>
       <Header />
       <div style={style}>
-        <StopArrivalTimes />
+        <Router history={hashHistory}>
+          <Route path="/" component={RouteSelector} />
+          <Route path="/arrivals" component={StopArrivalTimes} />
+          <Route path="/stops" component={StopSelector} />
+        </Router>
         <TransitMap />
       </div>
     </div>

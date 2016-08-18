@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
+import {browserHistory, refresh } from 'react-router';
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -21,6 +22,11 @@ class RouteSelector extends HeightResizingComponent {
       selectedRoute: routes[0].props.primaryText,
       height: window.innerHeight - 64 + "px"
     }
+  }
+
+  onFindClick() {
+    browserHistory.push("/transit/#/stops");
+    refresh();
   }
 
   render() {
@@ -50,7 +56,7 @@ class RouteSelector extends HeightResizingComponent {
               <SelectField value={this.state.selectedRoute}>{this.state.routes}</SelectField>
             </div>
             <div style={buttonContainerStyle}>
-              <RaisedButton label='Find Stops' primary={true} />
+              <RaisedButton onClick={::this.onFindClick} label='Find Stops' primary={true} />
             </div>
           </div>);
   }
