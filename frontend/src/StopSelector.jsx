@@ -24,7 +24,7 @@ class StopSelector extends HeightResizingComponent {
     this.serverRequest = $.get(this.stopUrl, function (result) {
       let stops = JSON.parse(result);
       this.setState({
-        stops: stops && _.take(stops, 10) || []
+        stops: stops || []
       });
     }.bind(this));
   }
@@ -55,7 +55,7 @@ class StopSelector extends HeightResizingComponent {
 
     return (
     <div style={divStyle}>
-      <h3>Nearby Stops for Route 1</h3>
+      <h3 style={{width: "100%", textAlign: "center"}}>Stops for Route {this.props.params.routeId}</h3>
       <List innerDivStyle={{ height: this.state.height }}>
         {this.createStopList()}
       </List>

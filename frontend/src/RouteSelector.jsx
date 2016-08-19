@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
-import {browserHistory, refresh } from 'react-router';
+import {browserHistory, refresh, Link } from 'react-router';
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -14,14 +14,18 @@ class RouteSelector extends HeightResizingComponent {
 
     let routes = window.routes.map((el) => {
       let text = `${el.route_short_name} ${el.route_long_name}`;
-      return <MenuItem value={text} routeId={el.route_id} key={el.id} primaryText={text} />
+      return <MenuItem value={el.route_id} routeId={el.route_id} key={el.id} primaryText={text} />
     });
 
     this.state = {
       routes: routes,
-      selectedRoute: routes[0].props.primaryText,
+      selectedRoute: routes[0].props.value,
       height: window.innerHeight - 64 + "px"
     }
+  }
+
+  onRouteSelect(event, index, value) {
+      this.setState({selectedRoute: value});
   }
 
   onFindClick() {
@@ -53,10 +57,12 @@ class RouteSelector extends HeightResizingComponent {
           <div style={divStyle}>
             <h3 style={{width:'100%', textAlign: 'center', marginTop:'40px'}}>Select a route</h3>
             <div style={routeSelectionStyle}>
-              <SelectField value={this.state.selectedRoute}>{this.state.routes}</SelectField>
+              <SelectField onChange={::this.onRouteSelect} value={this.state.selectedRoute}>{this.state.routes}</SelectField>
             </div>
             <div style={buttonContainerStyle}>
-              <RaisedButton onClick={::this.onFindClick} label='Find Stops' primary={true} />
+              <Link to={"/stops/" + this.state.selectedRoute}>
+              <RaisedButton  label='Find Stops' primary={true} />
+              </Link>
             </div>
           </div>);
   }
