@@ -15,7 +15,7 @@ class TransitMap extends Component {
       defaultAnimation: 2,
     }],
     width: window.innerWidth - 300 + "px",
-    height: window.innerHeight - 64 + "px"
+    height: window.innerHeight + "px"
   }
 
   constructor(props, context) {
@@ -35,7 +35,7 @@ class TransitMap extends Component {
     console.log(`handleWindowResize`, this._googleMapComponent);
     this.setState({
       width: window.innerWidth - 300 + "px",
-      height: window.innerHeight - 64 + "px"
+      height: window.innerHeight + "px"
     })
     triggerEvent(this._googleMapComponent, `resize`);
   }

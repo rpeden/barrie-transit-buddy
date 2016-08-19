@@ -32,13 +32,16 @@ const Container = () => {
   }
   return (
     <div>
-      <Header />
+
       <div style={style}>
+        <div style={{display: 'flex', flexDirection: 'column', width: '300px'}}>
+        <Header/>
         <Router history={hashHistory}>
           <Route path="/" component={RouteSelector} />
           <Route path="/arrivals" component={StopArrivalTimes} />
           <Route path="/stops/:routeId" component={StopSelector} />
         </Router>
+        </div>
         <TransitMap />
       </div>
     </div>
