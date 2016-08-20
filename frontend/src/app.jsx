@@ -39,7 +39,7 @@ const Container = () => {
         <Router history={hashHistory}>
           <Route path="/" component={RouteSelector} />
           <Route path="/arrivals" component={StopArrivalTimes} />
-          <Route path="/stops/:routeId" component={StopSelector} />
+          <Route path="/stops/:routeId/:routeName" component={StopSelector} />
         </Router>
         </div>
         <TransitMap />

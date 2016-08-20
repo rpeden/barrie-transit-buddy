@@ -3,8 +3,13 @@ import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import {List, ListItem} from 'material-ui/List';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
+import { headerStyle } from './Styles.js';
+import { hashHistory } from 'react-router';
 import $ from 'jquery';
 import _ from 'lodash';
 
@@ -17,7 +22,7 @@ class StopSelector extends HeightResizingComponent {
       stops: [],
       height: window.innerHeight - 64 + "px"
     };
-    this.stopUrl = "/routes/1/stops";
+    this.stopUrl = "/routes/" + this.props.params.routeId + "/stops";
   }
 
   componentDidMount() {
@@ -37,28 +42,48 @@ class StopSelector extends HeightResizingComponent {
 
   createStopList() {
     return this.state.stops.map((stop) => {
-      return <ListItem primaryText={`${stop.stop_id}  -  ${stop.stop_name}`} />
+      return <ListItem key={stop.stop_id} primaryText={`${stop.stop_id}  -  ${stop.stop_name}`} />
     });
+  }
+
+  onBackClick() {
+    setTimeout(() => {
+      hashHistory.goBack();
+    }, 350);
   }
 
   render() {
     const divStyle = {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
       width: '300px',
       height: this.state.height,
-      maxHeight: this.state.height,
       boxShadow: '5px 0px 11px -7px rgba(0,0,0,0.50)',
       zIndex: 10,
       backgroundColor: 'white',
       color: 'black',
-      overflow: 'auto'
     }
 
     return (
     <div style={divStyle}>
-      <h3 style={{width: "100%", textAlign: "center"}}>Stops for Route {this.props.params.routeId}</h3>
-      <List innerDivStyle={{ height: this.state.height }}>
+      <div>
+        <Toolbar style={{justifyContent:'auto'}}>
+          <ToolbarGroup firstChild={true}>
+            <IconButton onClick={::this.onBackClick} style={{marginTop:'5px'}}>
+              <NavigationArrowBack />
+            </IconButton>
+          </ToolbarGroup>
+          <ToolbarGroup lastChild={true} style={{alignSelf: 'center'}}>
+            <ToolbarTitle text={this.props.params.routeName} />
+          </ToolbarGroup>
+        </Toolbar>
+      </div>
+      <div style={{flexGrow: 1, overflow: 'auto'}}>
+      <List>
         {this.createStopList()}
       </List>
+      </div>
     </div>);
   }
 }
