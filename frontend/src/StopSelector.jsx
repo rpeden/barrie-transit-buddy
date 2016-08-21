@@ -27,7 +27,7 @@ class StopSelector extends HeightResizingComponent {
 
   componentDidMount() {
     this.serverRequest = $.get(this.stopUrl, function (result) {
-      let stops = JSON.parse(result);
+      const stops = JSON.parse(result);
       this.setState({
         stops: stops || []
       });
@@ -41,9 +41,17 @@ class StopSelector extends HeightResizingComponent {
   }
 
   createStopList() {
+    const handler = this.onStopClick;
+    const routeId = this.props.params.routeId;
     return this.state.stops.map((stop) => {
-      return <ListItem key={stop.stop_id} primaryText={`${stop.stop_id}  -  ${stop.stop_name}`} />
+      return <ListItem key={stop.stop_id}
+                       primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
+                       onClick={() => { handler(routeId, stop.stop_id) }} />
     });
+  }
+
+  onStopClick(routeId, stopId) {
+
   }
 
   onBackClick() {

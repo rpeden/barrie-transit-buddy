@@ -15,18 +15,27 @@ class StopArrivalTimes extends HeightResizingComponent {
   constructor(props) {
     super(props);
     this.state = {
-      stopNumber: 1,
-      routeId: 1,
+      stopNumber: this.props.params.stopId,
+      routeId: this.props.params.routeId,
+      trips: [],
       arrivals: [],
       height: window.innerHeight - 64 + "px"
     };
-    this.arrivalsUrl = "/routes/1/stops";
+    this.arrivalsUrl = ("/routes/" + this.props.params.routeId
+                                   + "/stops/"
+                                   + this.props.params.stopId
+                                   + "/trips");
   }
 
   componentDidMount() {
     let stopNum = this.state.stopNumber;
     socket.emit('stop-listen', stopNum);
-    socket.on(stopNum + "/7", function(data){
+    const setState = ::this.setState;
+    $.get(this.arrivalsUrl, function(data){
+      const trips = JSON.parse(data);
+      setState({trips: trips});
+    });
+    socket.on(stopNum + "/" + trips[0], function(data){
         this.setState({arrivals: [JSON.parse(data)]});
         console.log(data);
     }.bind(this));
@@ -43,8 +52,10 @@ class StopArrivalTimes extends HeightResizingComponent {
   }
 
   createArrivalsList() {
-    return this.state.arrivals.map((arrival) => {
-      return <ListItem key={arrival.tripId} primaryText={`${arrival.tripId}  -  delay ${arrival.delay}s`} />
+    return this.state.trips.map((trip) => {
+      return <ListItem key={trip.trip_id}
+                primaryText={`${trip.departure_time}`}
+                secondaryText="Scheduled" />
     });
   }
 
@@ -63,9 +74,13 @@ class StopArrivalTimes extends HeightResizingComponent {
     return (
     <div style={divStyle}>
       <h3 style={{width: '100%', textAlign:'center'}}>Arrivals for Route 1A at Stop 1</h3>
-      <List innerDivStyle={{ height: this.state.height }}>
+      {this.state.trips.map((trip) => {
+        return <h2>OMG trip {trip.trip_id}</h2>
+      })};
+      <List>
         {this.createArrivalsList()}
       </List>
+
     </div>);
   }
 }
