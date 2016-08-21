@@ -6,6 +6,7 @@ import {List, ListItem} from 'material-ui/List';
 import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import $ from 'jquery';
+import _ from 'lodash';
 import socket from './SocketIO.js'
 
 
@@ -31,20 +32,33 @@ class StopArrivalTimes extends HeightResizingComponent {
     let stopNum = this.state.stopNumber;
     socket.emit('stop-listen', stopNum);
     const setState = ::this.setState;
+
+    const listenForData = () => {
+        socket.on(stopNum + "/" + trips[0].trip_id, function(data){
+            setState({arrivals: [JSON.parse(data)]});
+            console.log(data);
+        });
+    }
+
+    const subscribeToStop = () => {
+        socket.emit('stop-subscribe', this.props.params.stopId);
+    }
+
     $.get(this.arrivalsUrl, function(data){
-      const trips = JSON.parse(data);
-      setState({trips: trips});
+        const trips = JSON.parse(data) || [];
+        setState({trips: _.take(trips, 5)});
+        if (trips.length > 0) {
+            subscribeToStop();
+            listenForData();
+        }
     });
-    socket.on(stopNum + "/" + trips[0], function(data){
-        this.setState({arrivals: [JSON.parse(data)]});
-        console.log(data);
-    }.bind(this));
   }
 
   componentWillUnmount() {
     if(this.serverRequest) {
       this.serverRequest.abort();
     }
+    socket.emit('stop-unsubscribe', this.props.params.stopId);
   }
 
   updateArrivalTimes() {
@@ -71,12 +85,13 @@ class StopArrivalTimes extends HeightResizingComponent {
       overflow: 'auto'
     }
 
+    const header = "Arrivals for Route" + this.props.params.routeId
+                                        + " at Stop "
+                                        + this.props.params.stopId;
+
     return (
     <div style={divStyle}>
-      <h3 style={{width: '100%', textAlign:'center'}}>Arrivals for Route 1A at Stop 1</h3>
-      {this.state.trips.map((trip) => {
-        return <h2>OMG trip {trip.trip_id}</h2>
-      })};
+      <h3 style={{width: '100%', textAlign:'center'}}>{header}</h3>
       <List>
         {this.createArrivalsList()}
       </List>
