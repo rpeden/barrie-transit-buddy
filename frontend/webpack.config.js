@@ -15,8 +15,9 @@ module.exports = {
               {
                 presets:['es2015','stage-1','react']
               }
-        } ]
+        }, { test: /\.json$/, loader: "json-loader" } ]
     },
+    devtool: 'source-map'
     /*plugins: [
         new webpack.optimize.UglifyJsPlugin({
             compress: {
