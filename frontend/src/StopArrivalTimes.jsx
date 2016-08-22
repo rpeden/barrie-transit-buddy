@@ -1,11 +1,7 @@
 import { Component } from 'react';
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import SelectField from 'material-ui/SelectField';
-import {List, ListItem} from 'material-ui/List';
-import MenuItem from 'material-ui/MenuItem';
 import {Table, TableBody, TableHeader
-        ,TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+        ,TableHeaderColumn, TableRow} from 'material-ui/Table';
 import HeightResizingComponent from './HeightResizingComponent.jsx';
 import $ from 'jquery';
 import _ from 'lodash';
