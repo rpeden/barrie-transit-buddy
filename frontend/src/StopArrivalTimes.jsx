@@ -34,7 +34,6 @@ const pluralize = (count, singluar, plural) => {
     return plural;
 }
 
-NOTE TO SELF: switch code below to use this method next
 const toMinutesFromNow = (futureDate) => {
     const currentTime = moment.tz('America/Toronto');
     const timeDiffSeconds = Math.floor(departureTime.diff(currentTime) / 1000);
@@ -97,26 +96,14 @@ class StopArrivalTimes extends HeightResizingComponent {
             const arrival = JSON.parse(data);
             const trip = _.find(trips, (trip) => trip.tripId == tripId);
             const rest = _.filter(trips, (trip) => trip.tripId != tripId)
-            const currentTime = moment.tz('America/Toronto');
-
-            const departureSplit = trip.scheduledString.split(':');
 
             const departureTime = timeToLocalDate(trip.scheduledString);
             const updatedSeconds = departureTime.second();
-
             if(updatedSeconds > 30) {
                 departureTime.add(1, 'minute');
             }
 
-            const timeDiffSeconds = Math.floor(departureTime.diff(currentTime) / 1000);
-            const timeDiffHours   = Math.floor(timeDiffSeconds / 3600);
-            //floor because we already account for extra minutes
-            //probably ok to just round here and avoid seconds check elsewhere
-            //but write tests to verify
-            const timeDiffMinutes = Math.floor(timeDiffSeconds / 60);
-
-            const diffString = `${timeDiffHours > 0 ? `${timeDiffHours} hours, ` : ''}` +
-                               `${timeDiffMinutes} minutes`;
+            const diffString = toMinutesFromNow(departureTime);
 
             trip["departureTime"] = diffString;//departureTime.format('h:mm a');
 
