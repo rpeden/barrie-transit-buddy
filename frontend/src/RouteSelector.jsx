@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import { hashHistory, refresh } from 'react-router';
 import { headerStyle } from './Styles.js';
 import { toTitleCase } from './utils/StringUtils.js';
@@ -57,18 +58,23 @@ class RouteSelector extends HeightResizingComponent {
       const routeSelectionStyle = {
         width: '85%',
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
+        marginTop: '15px'
       }
 
       return (
           <div style={divStyle}>
-            <h3 style={headerStyle}>Select a route</h3>
-            <div style={routeSelectionStyle}>
-              <SelectField onChange={::this.onRouteSelect} value={this.state.selectedRoute}>{this.state.routes}</SelectField>
-            </div>
-            <div style={buttonContainerStyle}>
-              <RaisedButton  onClick={::this.onFindClick} label='Find Stops' primary={true} />
-            </div>
+              <Toolbar style={{justifyContent:'auto'}}>
+                <ToolbarGroup lastChild={true} style={{alignSelf: 'center'}}>
+                    <ToolbarTitle style={{color: 'rgba(0,0,0,0.65)'}} text='Select a Route' />
+                </ToolbarGroup>
+              </Toolbar>
+              <div style={routeSelectionStyle}>
+                <SelectField onChange={::this.onRouteSelect} value={this.state.selectedRoute}>{this.state.routes}</SelectField>
+              </div>
+              <div style={buttonContainerStyle}>
+                <RaisedButton  onClick={::this.onFindClick} label='Find Stops' primary={true} />
+              </div>
           </div>);
   }
 }

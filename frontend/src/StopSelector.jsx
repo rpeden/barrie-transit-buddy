@@ -46,12 +46,15 @@ class StopSelector extends HeightResizingComponent {
     return this.state.stops.map((stop) => {
       return <ListItem key={stop.stop_id}
                        primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
-                       onClick={() => { handler(routeId, stop.stop_id) }} />
+                       onClick={() => { ::this.onStopClick(stop.stop_id) }} />
     });
   }
 
-  onStopClick(routeId, stopId) {
-
+  onStopClick(stopId) {
+      const routeId = this.props.params.routeId;
+      setTimeout(() => {
+          hashHistory.push(`/arrivals/${routeId}/${stopId}`)
+      }, 350)
   }
 
   onBackClick() {
@@ -83,7 +86,7 @@ class StopSelector extends HeightResizingComponent {
             </IconButton>
           </ToolbarGroup>
           <ToolbarGroup lastChild={true} style={{alignSelf: 'center'}}>
-            <ToolbarTitle text={this.props.params.routeName} />
+            <ToolbarTitle style={{color: 'rgba(0,0,0,0.65)'}} text={this.props.params.routeName} />
           </ToolbarGroup>
         </Toolbar>
       </div>

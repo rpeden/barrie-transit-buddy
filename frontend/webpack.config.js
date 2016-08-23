@@ -18,7 +18,7 @@ module.exports = {
         }, { test: /\.json$/, loader: "json-loader" } ]
     },
     devtool: 'source-map',
-    plugins: [
+    /*plugins: [
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -28,5 +28,5 @@ module.exports = {
                 comments: false,
             },
         }),
-    ]
+    ]*/
 }

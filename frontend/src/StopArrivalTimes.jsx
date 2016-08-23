@@ -3,10 +3,14 @@ import React from 'react';
 import {Table, TableBody, TableHeader
         ,TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import HeightResizingComponent from './HeightResizingComponent.jsx';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import IconButton from 'material-ui/IconButton';
+import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import $ from 'jquery';
 import _ from 'lodash';
 import socket from './SocketIO.js';
 import moment from '../vendor/moment-timezone';
+import { hashHistory } from 'react-router';
 
 //separate these out into own module
 const timeToLocalDate = (timeString, delay=0) => {
@@ -32,13 +36,13 @@ const pluralize = (count, singluar, plural) => {
 
 const toMinutesFromNow = (futureDate) => {
     const currentTime = moment.tz('America/Toronto');
-    const timeDiffSeconds = Math.floor(futureDate.diff(currentTime) / 1000);
+    let timeDiffSeconds = Math.floor(futureDate.diff(currentTime) / 1000);
     const timeDiffHours   = Math.floor(timeDiffSeconds / 3600);
     //floor because we already account for extra minutes
     //probably ok to just round here and avoid seconds check elsewhere
     //but write tests to verify
-    let timeDiffMinutes = Math.floor(timeDiffSeconds / 60);
-    if(timeDiffMinutes >= 3600) timeDiffMinutes -= 3600;
+    const timeDiffMinutes = Math.floor((timeDiffSeconds - (3600*timeDiffHours))/ 60);
+
 
     const diffString = `${timeDiffHours > 0 ? `${timeDiffHours}h ` : ''}` +
                        `${timeDiffMinutes} min`;
@@ -86,6 +90,7 @@ class StopArrivalTimes extends HeightResizingComponent {
 
     const listenForData = () => {
         const tripId = this.state.trips[0].tripId;
+        const updateArrivalTimes = ::this.updateArrivalTimes;
 
         socket.on(stopNum + "/" + tripId, function(data){
             const bufferSize = 10;
@@ -93,16 +98,6 @@ class StopArrivalTimes extends HeightResizingComponent {
             const arrival = JSON.parse(data);
             const trip = _.find(trips, (trip) => trip.tripId == tripId);
             const rest = _.filter(trips, (trip) => trip.tripId != tripId)
-
-            const departureTime = timeToLocalDate(trip.scheduledString);
-            const updatedSeconds = departureTime.second();
-            if(updatedSeconds > 30) {
-                departureTime.add(1, 'minute');
-            }
-
-            const diffString = toMinutesFromNow(departureTime);
-
-            trip["departureTime"] = diffString;//departureTime.format('h:mm a');
 
             if(!trip.hasOwnProperty("delays")) {
                 trip["delays"] = [];
@@ -112,7 +107,20 @@ class StopArrivalTimes extends HeightResizingComponent {
             }
             trip["delays"].push(arrival.delay || 0);
 
-            setState({trips: [].concat(trip).concat(rest) });
+            const departureTime = timeToLocalDate(trip.scheduledString);
+            departureTime.add(_.mean(trip["delays"]), 'seconds');
+
+            /*const updatedSeconds = departureTime.second();
+            if(updatedSeconds > 30) {
+                departureTime.add(1, 'minute');
+            }*/
+
+            const diffString = toMinutesFromNow(departureTime);
+
+            trip["departureTime"] = diffString;//departureTime.format('h:mm a');
+
+
+            setState({trips: [].concat(trip).concat(updateArrivalTimes(rest)) });
             console.log(data);
         });
     }
@@ -153,6 +161,14 @@ class StopArrivalTimes extends HeightResizingComponent {
     socket.emit('stop-unsubscribe', this.props.params.stopId);
   }
 
+  updateArrivalTimes(trips) {
+      const updatedTrips = trips.map((trip) => {
+          const updatedTime = toMinutesFromNow(timeToLocalDate(trip.scheduledString));
+          return Object.assign(trip, { departureTime: updatedTime })
+      });
+      return updatedTrips;
+  }
+
   createArrivalsList() {
     return this.state.trips.map((trip) => {
         let text = "Scheduled";
@@ -179,12 +195,18 @@ class StopArrivalTimes extends HeightResizingComponent {
         const column = (text) => <TableRowColumn style={rowStyle}>{text}</TableRowColumn>;
 
         return (
-                <TableRow>
+                <TableRow key={trip.tripId}>
                     {column(trip.departureTime)}
                     {column(text)}
                 </TableRow>
         );
     });
+  }
+
+  onBackClick() {
+    setTimeout(() => {
+      hashHistory.goBack();
+    }, 350);
   }
 
   render() {
@@ -203,13 +225,29 @@ class StopArrivalTimes extends HeightResizingComponent {
         fontSize: '19px'
     }
 
-    const header = "Arrivals for Route " + this.props.params.routeId
-                                         + " at Stop "
-                                         + this.props.params.stopId;
+    const headerColorStyle = {
+        color: 'rgba(0,0,0,0.65)'
+    }
+
+    const routeStyle = Object.assign({}, headerColorStyle, { fontSize: '20px' });
+    const stopStyle  = Object.assign({}, headerColorStyle,
+                                     { fontSize: '16px', marginTop: '5px' });
 
     return (
         <div style={divStyle}>
-          <h3 style={{width: '100%', textAlign:'center'}}>{header}</h3>
+            <Toolbar style={{justifyContent:'auto'}}>
+              <ToolbarGroup firstChild={true}>
+                <IconButton onClick={::this.onBackClick} style={{marginTop:'5px'}}>
+                  <NavigationArrowBack />
+                </IconButton>
+              </ToolbarGroup>
+              <ToolbarGroup lastChild={true} style={{alignSelf: 'center'}}>
+                <div>
+                    <div style={routeStyle}>{"Route " + this.props.params.routeId}</div>
+                    <div style={stopStyle}>{"Stop " + this.props.params.stopId}</div>
+                </div>
+              </ToolbarGroup>
+            </Toolbar>
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
               <TableRow>
