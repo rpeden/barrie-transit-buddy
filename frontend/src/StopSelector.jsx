@@ -1,12 +1,9 @@
 import { Component } from 'react';
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import SelectField from 'material-ui/SelectField';
 import {List, ListItem} from 'material-ui/List';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import MenuItem from 'material-ui/MenuItem';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import { headerStyle } from './Styles.js';
 import { hashHistory } from 'react-router';

@@ -1,8 +1,6 @@
 import { Component } from 'react';
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import {List, ListItem} from 'material-ui/List';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import { hashHistory, refresh } from 'react-router';
@@ -16,8 +14,13 @@ class RouteSelector extends HeightResizingComponent {
     super(props, context);
 
     let routes = window.routes.map((el) => {
-      let text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
-      return <MenuItem value={{routeId: el.route_id, name: text}} key={el.id} primaryText={text} />
+      const text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
+      const handler = () => this.onRouteClick(el.route_id, text);
+
+      return <ListItem value={{routeId: el.route_id, name: text}}
+                       key={el.id}
+                       primaryText={text}
+                       onClick={handler}/>
     });
 
     this.state = {
@@ -27,28 +30,26 @@ class RouteSelector extends HeightResizingComponent {
     }
   }
 
-  onRouteSelect(event, index, value) {
-      this.setState({selectedRoute: value});
-  }
-
-  onFindClick() {
+  onRouteClick(routeId, stopName) {
     setTimeout(() => {
-      let selected = this.state.selectedRoute;
-      hashHistory.push("/stops/" + selected.routeId
+      hashHistory.push("/stops/" + routeId
                                  + "/"
-                                 + encodeURIComponent(selected.name));
+                                 + encodeURIComponent(stopName));
     }, 350);
 
   }
 
   render() {
       const divStyle = {
-        width: '300px',
-        height: this.state.height,
-        boxShadow: '5px 0px 11px -7px rgba(0,0,0,0.50)',
-        zIndex: 10,
-        backgroundColor: 'white',
-        color: 'black',
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          width: '300px',
+          height: this.state.height,
+          boxShadow: '5px 0px 11px -7px rgba(0,0,0,0.50)',
+          zIndex: 10,
+          backgroundColor: 'white',
+          color: 'black',
       }
       const buttonContainerStyle = {
         width: '90%',
@@ -69,11 +70,10 @@ class RouteSelector extends HeightResizingComponent {
                     <ToolbarTitle style={{color: 'rgba(0,0,0,0.65)'}} text='Select a Route' />
                 </ToolbarGroup>
               </Toolbar>
-              <div style={routeSelectionStyle}>
-                <SelectField onChange={::this.onRouteSelect} value={this.state.selectedRoute}>{this.state.routes}</SelectField>
-              </div>
-              <div style={buttonContainerStyle}>
-                <RaisedButton  onClick={::this.onFindClick} label='Find Stops' primary={true} />
+              <div style={{flexGrow: 1, overflow: 'auto'}}>
+                  <List>
+                    {this.state.routes}
+                  </List>
               </div>
           </div>);
   }
