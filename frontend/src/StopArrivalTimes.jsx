@@ -1,12 +1,12 @@
 import { Component } from 'react';
 import React from 'react';
 import {Table, TableBody, TableHeader
-        ,TableHeaderColumn, TableRow} from 'material-ui/Table';
+        ,TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import HeightResizingComponent from './HeightResizingComponent.jsx';
 import $ from 'jquery';
 import _ from 'lodash';
 import socket from './SocketIO.js';
-import moment from 'moment-timezone';
+import moment from '../vendor/moment-timezone';
 
 //separate these out into own module
 const timeToLocalDate = (timeString, delay=0) => {
@@ -32,15 +32,16 @@ const pluralize = (count, singluar, plural) => {
 
 const toMinutesFromNow = (futureDate) => {
     const currentTime = moment.tz('America/Toronto');
-    const timeDiffSeconds = Math.floor(departureTime.diff(currentTime) / 1000);
+    const timeDiffSeconds = Math.floor(futureDate.diff(currentTime) / 1000);
     const timeDiffHours   = Math.floor(timeDiffSeconds / 3600);
     //floor because we already account for extra minutes
     //probably ok to just round here and avoid seconds check elsewhere
     //but write tests to verify
-    const timeDiffMinutes = Math.floor(timeDiffSeconds / 60);
+    let timeDiffMinutes = Math.floor(timeDiffSeconds / 60);
+    if(timeDiffMinutes >= 3600) timeDiffMinutes -= 3600;
 
-    const diffString = `${timeDiffHours > 0 ? `${timeDiffHours} hours, ` : ''}` +
-                       `${timeDiffMinutes} minutes`;
+    const diffString = `${timeDiffHours > 0 ? `${timeDiffHours}h ` : ''}` +
+                       `${timeDiffMinutes} min`;
     return diffString;
 }
 
@@ -126,8 +127,9 @@ class StopArrivalTimes extends HeightResizingComponent {
         var filteredTrips = _.chain(trips)
                              .take(5)
                              .map(trip => {
-                                 let scheduledTime = timeToLocalDate(trip.departure_time)
-                                                        .format('h:mm a');
+                                 let scheduledTime =
+                                    toMinutesFromNow(timeToLocalDate(trip.departure_time))
+
                                  return {
                                      scheduledString: trip.departure_time,
                                      scheduledDepartureTime: scheduledTime,
@@ -163,10 +165,10 @@ class StopArrivalTimes extends HeightResizingComponent {
                 text = "On Time"
             } else if (early) {
                 let delay = Math.round(bufferedDelay / -60);
-                text = `${minutes} ${pluralize(delay,'minute','minutes')} early`;
+                text = `${delay} ${pluralize(delay,'min','mins')} early`;
             } else {
                 let delay = Math.round(bufferedDelay / 60);
-                text = `${minutes} ${pluralize(delay,'minute','minutes')} late`;
+                text = `${delay} ${pluralize(delay,'min','mins')} late`;
             }
         }
 
