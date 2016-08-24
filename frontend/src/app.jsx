@@ -6,7 +6,7 @@ import TransitMap from './TransitMap.jsx';
 import RouteSelector from './RouteSelector.jsx';
 import StopSelector from './StopSelector.jsx';
 import StopArrivalTimes from './StopArrivalTimes.jsx';
-import AppHeader from './AppHeader.tsx';
+import AppHeader from './AppHeader.jsx';
 import { Router, Route, hashHistory } from 'react-router'
 
 import injectTapEventPlugin from 'react-tap-event-plugin';

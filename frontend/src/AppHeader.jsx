@@ -1,11 +1,12 @@
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 
-interface HeaderProps {
-    title: string
-}
-
-export default function(props: HeaderProps) {
+/**
+ *
+ * @param props Object
+ * @returns {ReactElement}
+ */
+export default function(props) {
         return (
             <div>
                 <AppBar iconElementLeft={<span></span>} title={props.title} />
