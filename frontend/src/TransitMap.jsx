@@ -2,7 +2,6 @@ import { Component } from 'react';
 import React from 'react';
 import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
 import _ from 'lodash';
-import eventBus from './EventBus.js'
 
 class TransitMap extends Component {
   state = {
