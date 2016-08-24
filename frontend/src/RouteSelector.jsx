@@ -1,10 +1,8 @@
-import { Component } from 'react';
-import React from 'react';
+import * as React from 'react';
 import {List, ListItem} from 'material-ui/List';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-import { hashHistory, refresh } from 'react-router';
-import { headerStyle } from './Styles.js';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
+import { hashHistory } from 'react-router';
 import { toTitleCase } from './utils/StringUtils.js';
 
 
@@ -36,7 +34,6 @@ class RouteSelector extends HeightResizingComponent {
                                  + "/"
                                  + encodeURIComponent(stopName));
     }, 350);
-
   }
 
   render() {

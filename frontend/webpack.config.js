@@ -8,6 +8,10 @@ module.exports = {
     },
     module: {
         loaders: [{
+            test: /\.tsx?$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader!ts-loader'
+        },{
             test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel-loader',
