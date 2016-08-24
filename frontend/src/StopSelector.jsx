@@ -96,4 +96,22 @@ class StopSelector extends HeightResizingComponent {
   }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        stops: state.stops
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onStopClick: (routeId, stopId) => {
+            setTimeout(() => {
+                hashHistory.push(`/arrivals/${routeId}/${stopId}`)
+            }, 350)
+        }
+    }
+}
+
+const Selector = connect(mapStateToProps,mapDispatchToProps)(StopSelector);
+
 export default StopSelector;

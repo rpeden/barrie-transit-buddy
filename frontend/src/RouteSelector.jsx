@@ -4,6 +4,7 @@ import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import { hashHistory } from 'react-router';
 import { toTitleCase } from './utils/StringUtils.js';
+import { connect } from 'react-redux'
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -11,29 +12,22 @@ class RouteSelector extends HeightResizingComponent {
   constructor(props, context) {
     super(props, context);
 
-    let routes = window.routes.map((el) => {
-      const text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
-      const handler = () => this.onRouteClick(el.route_id, text);
-
-      return <ListItem value={{routeId: el.route_id, name: text}}
-                       key={el.id}
-                       primaryText={text}
-                       onClick={handler}/>
-    });
-
     this.state = {
-      routes: routes,
-      selectedRoute: routes[0].props.value,
       height: window.innerHeight - 64 + "px"
     }
   }
 
-  onRouteClick(routeId, stopName) {
-    setTimeout(() => {
-      hashHistory.push("/stops/" + routeId
-                                 + "/"
-                                 + encodeURIComponent(stopName));
-    }, 350);
+  createRoutes() {
+      let routes = this.props.routes.map((el) => {
+        const text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
+        const handler = () => this.props.onRouteClick(el.route_id, text);
+
+        return <ListItem value={{routeId: el.route_id, name: text}}
+                         key={el.id}
+                         primaryText={text}
+                         onClick={handler}/>
+      });
+      return routes;
   }
 
   render() {
@@ -69,12 +63,32 @@ class RouteSelector extends HeightResizingComponent {
               </Toolbar>
               <div style={{flexGrow: 1, overflow: 'auto'}}>
                   <List>
-                    {this.state.routes}
+                    {this.createRoutes()}
                   </List>
               </div>
           </div>);
   }
 }
 
-exports.RouteSelector = RouteSelector;
-export default RouteSelector;
+const mapStateToProps = (state) => {
+    return {
+        routes: state.routes
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      onRouteClick: (routeId, stopName) => {
+        /****NOTE TO SELF, ADD DISPATCH TO FETCH STSOPS*****/
+        setTimeout(() => {
+          hashHistory.push("/stops/" + routeId
+                                     + "/"
+                                     + encodeURIComponent(stopName));
+        }, 350);
+      }
+    }
+}
+
+const Selector = connect(mapStateToProps,mapDispatchToProps)(RouteSelector);
+
+export default Selector;

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="93993094-07c3-4a99-bb05-7cd8c63459b6" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/frontend/src/EventBus.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/frontend/src/TransitMap.jsx" afterPath="$PROJECT_DIR$/frontend/src/TransitMap.jsx" />
-    </list>
+    <list default="true" id="93993094-07c3-4a99-bb05-7cd8c63459b6" name="Default" comment="" />
     <ignored path="barrie-transit-buddy.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -336,12 +333,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1472001136783</updated>
-      <workItem from="1472001138916" duration="3142000" />
+      <workItem from="1472001138916" duration="3740000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3142000" />
+    <option name="totallyTimeSpent" value="3740000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="2260" y="47" width="1400" height="1000" extended-state="0" />
