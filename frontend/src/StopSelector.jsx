@@ -1,14 +1,14 @@
-import { Component } from 'react';
 import React from 'react';
 import {List, ListItem} from 'material-ui/List';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
-import { headerStyle } from './Styles.js';
 import { hashHistory } from 'react-router';
-import $ from 'jquery';
-import _ from 'lodash';
+import { connect } from 'react-redux'
+import { connect } from 'react-redux'
+import { fetchArrivalTimes } from './store/ActionCreators';
+
 
 
 class StopSelector extends HeightResizingComponent {
@@ -19,28 +19,10 @@ class StopSelector extends HeightResizingComponent {
       stops: [],
       height: window.innerHeight - 64 + "px"
     };
-    this.stopUrl = "/routes/" + this.props.params.routeId + "/stops";
-  }
-
-  componentDidMount() {
-    this.serverRequest = $.get(this.stopUrl, function (result) {
-      const stops = JSON.parse(result);
-      this.setState({
-        stops: stops || []
-      });
-    }.bind(this));
-  }
-
-  componentWillUnmount() {
-    if(this.serverRequest) {
-      this.serverRequest.abort();
-    }
   }
 
   createStopList() {
-    const handler = this.onStopClick;
-    const routeId = this.props.params.routeId;
-    return this.state.stops.map((stop) => {
+    return this.props.stops.map((stop) => {
       return <ListItem key={stop.stop_id}
                        primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
                        onClick={() => { ::this.onStopClick(stop.stop_id) }} />
@@ -105,6 +87,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onStopClick: (routeId, stopId) => {
+            fetchArrivalTimes(routeId, stopId)
             setTimeout(() => {
                 hashHistory.push(`/arrivals/${routeId}/${stopId}`)
             }, 350)
@@ -114,4 +97,4 @@ const mapDispatchToProps = (dispatch) => {
 
 const Selector = connect(mapStateToProps,mapDispatchToProps)(StopSelector);
 
-export default StopSelector;
+export default Selector;

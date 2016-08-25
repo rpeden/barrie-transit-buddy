@@ -5,6 +5,7 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import { hashHistory } from 'react-router';
 import { toTitleCase } from './utils/StringUtils.js';
 import { connect } from 'react-redux'
+import { fetchStops } from './store/ActionCreators';
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -79,7 +80,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
       onRouteClick: (routeId, stopName) => {
-        /****NOTE TO SELF, ADD DISPATCH TO FETCH STSOPS*****/
+        fetchStops(routeId);
         setTimeout(() => {
           hashHistory.push("/stops/" + routeId
                                      + "/"
