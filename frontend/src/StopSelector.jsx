@@ -5,8 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import HeightResizingComponent  from './HeightResizingComponent.jsx';
 import { hashHistory } from 'react-router';
-import { connect } from 'react-redux'
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { fetchArrivalTimes } from './store/ActionCreators';
 
 
@@ -22,11 +21,12 @@ class StopSelector extends HeightResizingComponent {
   }
 
   createStopList() {
-    return this.props.stops.map((stop) => {
-      return <ListItem key={stop.stop_id}
-                       primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
-                       onClick={() => { ::this.onStopClick(stop.stop_id) }} />
-    });
+      const routeId = this.props.params.routeId;
+      return this.props.stops.map((stop) => {
+        return <ListItem key={stop.stop_id}
+                         primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
+                         onClick={() => { this.props.onStopClick(routeId, stop.stop_id) }} />
+      });
   }
 
   onStopClick(stopId) {
@@ -87,7 +87,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onStopClick: (routeId, stopId) => {
-            fetchArrivalTimes(routeId, stopId)
+            dispatch(fetchArrivalTimes(routeId, stopId));
             setTimeout(() => {
                 hashHistory.push(`/arrivals/${routeId}/${stopId}`)
             }, 350)

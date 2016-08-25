@@ -1,53 +1,18 @@
-import { Component } from 'react';
 import React from 'react';
 import {Table, TableBody, TableHeader
         ,TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import HeightResizingComponent from './HeightResizingComponent.jsx';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import $ from 'jquery';
 import _ from 'lodash';
 import socket from './SocketIO.js';
-import moment from '../vendor/moment-timezone';
 import { hashHistory } from 'react-router';
+import { toMinutesFromNow, timeToLocalDate, pluralize } from './utils/StringUtils';
+import * as creators  from './store/ActionCreators';
+import { connect } from 'react-redux';
 
-//separate these out into own module
-const timeToLocalDate = (timeString, delay=0) => {
-    const timeSplit = timeString.split(':');
-
-    let tz = moment.tz('America/Toronto').hours(timeSplit[0])
-                                         .minutes(timeSplit[1])
-                                         .add(delay, 'seconds');
-
-    if(timeSplit.length > 2) {
-        tz.seconds(timeSplit[2]);
-    }
-
-    return tz;
-}
-
-const pluralize = (count, singluar, plural) => {
-    if(count == 1) {
-        return singluar;
-    }
-    return plural;
-}
-
-const toMinutesFromNow = (futureDate) => {
-    const currentTime = moment.tz('America/Toronto');
-    let timeDiffSeconds = Math.floor(futureDate.diff(currentTime) / 1000);
-    const timeDiffHours   = Math.floor(timeDiffSeconds / 3600);
-    //floor because we already account for extra minutes
-    //probably ok to just round here and avoid seconds check elsewhere
-    //but write tests to verify
-    const timeDiffMinutes = Math.floor((timeDiffSeconds - (3600*timeDiffHours))/ 60);
-
-
-    const diffString = `${timeDiffHours > 0 ? `${timeDiffHours}h ` : ''}` +
-                       `${timeDiffMinutes} min`;
-    return diffString;
-}
 
 class StopArrivalTimes extends HeightResizingComponent {
 
@@ -71,7 +36,8 @@ class StopArrivalTimes extends HeightResizingComponent {
   }
 
   componentDidMount() {
-    let stopNum = this.state.stopNumber;
+      this.props.subscribeToStop(this.props.params.stopId);
+    /*let stopNum = this.state.stopNumber;
 
     const setState = ::this.setState;
     const getState = ::this.getState;
@@ -113,12 +79,12 @@ class StopArrivalTimes extends HeightResizingComponent {
             /*const updatedSeconds = departureTime.second();
             if(updatedSeconds > 30) {
                 departureTime.add(1, 'minute');
-            }*/
+            }
 
             const diffString = toMinutesFromNow(departureTime);
 
             trip["departureTime"] = diffString;//departureTime.format('h:mm a');
-
+let
 
             setState({trips: [].concat(trip).concat(updateArrivalTimes(rest)) });
             console.log(data);
@@ -151,14 +117,16 @@ class StopArrivalTimes extends HeightResizingComponent {
             subscribeToStop();
             listenForData();
         }
-    });
+    });*/
   }
 
   componentWillUnmount() {
+      this.props.unsubscribeFromStop(this.props.params.stopId);
+      /*
     if(this.serverRequest) {
       this.serverRequest.abort();
     }
-    socket.emit('stop-unsubscribe', this.props.params.stopId);
+    socket.emit('stop-unsubscribe', this.props.params.stopId);*/
   }
 
   updateArrivalTimes(trips) {
@@ -170,7 +138,7 @@ class StopArrivalTimes extends HeightResizingComponent {
   }
 
   createArrivalsList() {
-    return this.state.trips.map((trip) => {
+    return this.props.arrivals.map((trip) => {
         let text = "Scheduled";
         if (trip.delays) {
             const bufferedDelay = _.mean(trip.delays);
@@ -268,4 +236,23 @@ class StopArrivalTimes extends HeightResizingComponent {
   }
 }
 
-export default StopArrivalTimes;
+const mapStateToProps = (state) => {
+    return {
+        arrivals: state.arrivals
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        subscribeToStop: (stopId) => {
+            dispatch(creators.subscribeToStop(stopId))
+        },
+        unsubscribeFromStop: (stopId) => {
+            dispatch(creators.unsubscribeFromStop((stopId)))
+        }
+    }
+}
+
+const ArrivalTimes = connect(mapStateToProps,mapDispatchToProps)(StopArrivalTimes);
+
+export default ArrivalTimes;
