@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import React from 'react';
-import { GoogleMapLoader, GoogleMap, Marker } from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Marker, Polyline } from "react-google-maps";
 import _ from 'lodash';
 
 class TransitMap extends Component {
@@ -14,7 +14,10 @@ class TransitMap extends Component {
       defaultAnimation: 2,
     }],
     width: window.innerWidth - 300 + "px",
-    height: window.innerHeight + "px"
+    height: window.innerHeight + "px",
+    points: [new google.maps.LatLng(44.3403594369073,-79.6803241968155),
+             new google.maps.LatLng(44.3407047330346,-79.6801847219467),
+             new google.maps.LatLng(44.3410346807673,-79.6801847219467)]
   }
 
   constructor(props, context) {
@@ -97,14 +100,8 @@ class TransitMap extends Component {
             defaultCenter={{ lat: 44.389, lng: -79.688 }}
             onClick={::this.handleMapClick}
           >
-            {this.state.markers.map((marker, index) => {
-              return (
-                <Marker
-                  {...marker}
-                  onRightclick={this.handleMarkerRightclick.bind(this, index)}
-                />
-              );
-            })}
+
+            <Polyline path={this.state.points} options={{geodesic:true, strokeColor:'#FF0000', strokeOpacity: 1.0, strokeWeight: 2}}/>
           </GoogleMap>
         }
       />
