@@ -18,6 +18,7 @@ class StopArrivalTimes extends HeightResizingComponent {
 
   constructor(props) {
     super(props);
+    
     this.state = {
       stopNumber: this.props.params.stopId,
       routeId: this.props.params.routeId,
@@ -25,108 +26,21 @@ class StopArrivalTimes extends HeightResizingComponent {
       arrivals: [],
       height: window.innerHeight - 64 + "px"
     };
+
     this.arrivalsUrl = ("/routes/" + this.props.params.routeId
                                    + "/stops/"
                                    + this.props.params.stopId
                                    + "/trips");
+
+    this.props.subscribeToStop(this.props.params.stopId);
   }
 
   getState() {
       return this.state;
   }
 
-  componentDidMount() {
-      this.props.subscribeToStop(this.props.params.stopId);
-    /*let stopNum = this.state.stopNumber;
-
-    const setState = ::this.setState;
-    const getState = ::this.getState;
-
-    const getBufferSize = (secondsToDeparture) => {
-        if(secondsToDeparture > 500) {
-            //more than 5 minutes out, use mean of last 10
-            return 10;
-        } else if (secondsToDeparture > 180) {
-            return 5;
-        } else {
-            return 2;
-        }
-
-    }
-
-    const listenForData = () => {
-        const tripId = this.state.trips[0].tripId;
-        const updateArrivalTimes = ::this.updateArrivalTimes;
-
-        socket.on(stopNum + "/" + tripId, function(data){
-            const bufferSize = 10;
-            const trips = getState().trips;
-            const arrival = JSON.parse(data);
-            const trip = _.find(trips, (trip) => trip.tripId == tripId);
-            const rest = _.filter(trips, (trip) => trip.tripId != tripId)
-
-            if(!trip.hasOwnProperty("delays")) {
-                trip["delays"] = [];
-            }
-            if(trip["delays"].length >= bufferSize) {
-                trip["delays"] = _.take(trip["delays"], bufferSize);
-            }
-            trip["delays"].push(arrival.delay || 0);
-
-            const departureTime = timeToLocalDate(trip.scheduledString);
-            departureTime.add(_.mean(trip["delays"]), 'seconds');
-
-            /*const updatedSeconds = departureTime.second();
-            if(updatedSeconds > 30) {
-                departureTime.add(1, 'minute');
-            }
-
-            const diffString = toMinutesFromNow(departureTime);
-
-            trip["departureTime"] = diffString;//departureTime.format('h:mm a');
-let
-
-            setState({trips: [].concat(trip).concat(updateArrivalTimes(rest)) });
-            console.log(data);
-        });
-    }
-
-    const subscribeToStop = () => {
-        socket.emit('stop-subscribe', this.props.params.stopId);
-    }
-
-    $.get(this.arrivalsUrl, function(data){
-        const trips = JSON.parse(data) || [];
-
-        var filteredTrips = _.chain(trips)
-                             .take(5)
-                             .map(trip => {
-                                 let scheduledTime =
-                                    toMinutesFromNow(timeToLocalDate(trip.departure_time))
-
-                                 return {
-                                     scheduledString: trip.departure_time,
-                                     scheduledDepartureTime: scheduledTime,
-                                     departureTime: scheduledTime,
-                                     tripId: trip.trip_id
-                                 };
-                             }).value();
-
-        setState({trips: filteredTrips});
-        if (trips.length > 0) {
-            subscribeToStop();
-            listenForData();
-        }
-    });*/
-  }
-
   componentWillUnmount() {
       this.props.unsubscribeFromStop(this.props.params.stopId);
-      /*
-    if(this.serverRequest) {
-      this.serverRequest.abort();
-    }
-    socket.emit('stop-unsubscribe', this.props.params.stopId);*/
   }
 
   updateArrivalTimes(trips) {
