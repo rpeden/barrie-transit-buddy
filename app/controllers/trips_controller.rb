@@ -1,5 +1,5 @@
 class TripsController < ApplicationController
-    include TransitHelper
+  include TransitHelper
 
   def trips_for_route_and_stop
     route_id = params[:route_id]
