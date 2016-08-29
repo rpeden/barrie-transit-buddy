@@ -16,6 +16,13 @@ export const fetchArrivalTimes = (routeId, stopId) => {
     }
 }
 
+export const fetchRouteShapes = (routeId) => {
+    return {
+        type: actions.FETCH_SHAPES_FOR_ROUTE,
+        routeId: routeId
+    }
+}
+
 export const subscribeToStop = (stopId) => {
     return {
         type: actions.SUBSCRIBE_STOP_ARRIVALS,
@@ -27,5 +34,11 @@ export const unsubscribeFromStop = (stopId) => {
     return {
         type: actions.UNSUBSCRIBE_STOP_ARRIVALS,
         stopId: stopId
+    }
+}
+
+export const clearShapes = () => {
+    return {
+        type: actions.CLEAR_SHAPES        
     }
 }

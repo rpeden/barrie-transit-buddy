@@ -6,4 +6,9 @@ protect_from_forgery
     render :json => routes.to_json
   end
 
+  def shapes_for_route
+      route_id = params[:routeId]
+      shapes = Shape.where(shape_id: route_id).order(shape_pt_sequence: :asc)
+      render :json => shapes.to_json
+  end
 end

@@ -2,6 +2,7 @@ import { Component } from 'react';
 import React from 'react';
 import { GoogleMapLoader, GoogleMap, Marker, Polyline } from "react-google-maps";
 import _ from 'lodash';
+import { connect } from 'react-redux'
 
 class TransitMap extends Component {
   state = {
@@ -87,7 +88,7 @@ class TransitMap extends Component {
       <GoogleMapLoader
         containerElement={
           <div
-            {...this.props}
+
             style={{
               height: this.state.height,
               width: this.state.width
@@ -101,7 +102,7 @@ class TransitMap extends Component {
             onClick={::this.handleMapClick}
           >
 
-            <Polyline path={this.state.points} options={{geodesic:true, strokeColor:'#FF0000', strokeOpacity: 1.0, strokeWeight: 2}}/>
+            <Polyline path={this.props.shapes} options={{geodesic:true, strokeColor:'#3366ff', strokeOpacity: 0.7, strokeWeight: 4}}/>
           </GoogleMap>
         }
       />
@@ -109,4 +110,17 @@ class TransitMap extends Component {
   }
 }
 
-export default TransitMap;
+const mapStateToProps = (state) => {
+    return {
+        shapes: state.shapes
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+    }
+}
+
+const Map = connect(mapStateToProps,mapDispatchToProps)(TransitMap);
+
+export default Map;

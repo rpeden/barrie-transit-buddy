@@ -5,7 +5,7 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import { hashHistory } from 'react-router';
 import { toTitleCase } from './utils/StringUtils.js';
 import { connect } from 'react-redux'
-import { fetchStops } from './store/ActionCreators';
+import { fetchStops, fetchRouteShapes, clearShapes } from './store/ActionCreators';
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -19,6 +19,10 @@ class RouteSelector extends HeightResizingComponent {
   }
 
   createRoutes() {
+      let onRouteEnter = function(routeId) {
+          this.props.onRouteEnter(routeId);
+      }.bind(this);
+
       let routes = this.props.routes.map((el) => {
         const text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
         const handler = () => this.props.onRouteClick(el.route_id, text);
@@ -26,6 +30,7 @@ class RouteSelector extends HeightResizingComponent {
         return <ListItem value={{routeId: el.route_id, name: text}}
                          key={el.id}
                          primaryText={text}
+                         onMouseEnter={() => { onRouteEnter(el.shape_id) }}
                          onClick={handler}/>
       });
       return routes;
@@ -86,6 +91,14 @@ const mapDispatchToProps = (dispatch) => {
                                      + "/"
                                      + encodeURIComponent(stopName));
         }, 350);
+      },
+      onRouteEnter: (routeId) => {
+          let fetchShapesAction = fetchRouteShapes(routeId);
+          dispatch(fetchShapesAction);
+      },
+      onRouteLeave: (routeId) => {
+          let clearShapesAction = clearShapes(routeId);
+          displatch(clearShapesAction);
       }
     }
 }

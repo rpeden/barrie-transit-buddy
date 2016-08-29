@@ -7,9 +7,12 @@ import socket from '../SocketIO.js';
 export const actions = {
     FETCH_STOPS_FOR_ROUTE: "FetchStopsForRoute",
     FETCH_ARRIVAL_TIMES: "FetchStopTimes",
+    FETCH_SHAPES_FOR_ROUTE: "FetchShapesForRoute",
     UPDATE_STOPS: "UpdateStops",
     UPDATE_ARRIVAL_TIMES: "UpdateArrivalTimes",
+    UPDATE_SHAPES: "UpdateShapes",
     CLEAR_STOPS: "ClearStops",
+    CLEAR_SHAPES: "ClearShapes",
     SUBSCRIBE_STOP_ARRIVALS: "SubscribeStopArrivals",
     UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals"
 }
@@ -58,6 +61,22 @@ export const fetchArrivalTimes = (routeId, stopId) => {
         }
     });
 }
+
+export const fetchShapesForRoute = (routeId) => {
+    const shapesUrl = "/routes/" + routeId + "/shapes.json";
+    $.get(shapesUrl, (data) => {
+        const shapes = data || [];
+        if(shapes.length > 0) {
+            store.dispatch({
+                type: actions.UPDATE_SHAPES,
+                shapes: shapes.map((shape) => {
+                    return new google.maps.LatLng(shape.shape_pt_lat, shape.shape_pt_lon);
+                })
+            });
+        }
+    });
+}
+window.fetchShapes = fetchShapesForRoute;
 
 const listenForData = (tripId, stopNum) => {
 
