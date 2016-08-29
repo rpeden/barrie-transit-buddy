@@ -3,6 +3,7 @@ import store from './store.js'
 import { toMinutesFromNow, timeToLocalDate } from '../utils/StringUtils';
 import _ from 'lodash';
 import socket from '../SocketIO.js';
+import ShapeCache  from '../utils/ShapeCache.js';
 
 export const actions = {
     FETCH_STOPS_FOR_ROUTE: "FetchStopsForRoute",
@@ -62,19 +63,32 @@ export const fetchArrivalTimes = (routeId, stopId) => {
     });
 }
 
-export const fetchShapesForRoute = (routeId) => {
-    const shapesUrl = "/routes/" + routeId + "/shapes.json";
-    $.get(shapesUrl, (data) => {
-        const shapes = data || [];
-        if(shapes.length > 0) {
-            store.dispatch({
-                type: actions.UPDATE_SHAPES,
-                shapes: shapes.map((shape) => {
-                    return new google.maps.LatLng(shape.shape_pt_lat, shape.shape_pt_lon);
-                })
-            });
-        }
-    });
+let shapeCache = new ShapeCache();
+
+export const fetchShapesForRoute = (shapeId) => {
+    const updateShapes = (shapes) => {
+        store.dispatch({
+            type: actions.UPDATE_SHAPES,
+            shapes: shapes.map((shape) => {
+                return new google.maps.LatLng(shape.shape_pt_lat, shape.shape_pt_lon);
+            })
+        });
+    }
+
+    if(shapeCache.get(shapeId)) {
+        setTimeout(() => {
+            updateShapes(shapeCache.get(shapeId));
+        }, 1);
+    } else {
+        const shapesUrl = "/routes/" + shapeId + "/shapes.json";
+        $.get(shapesUrl, (data) => {
+            const shapes = data || [];
+            if(shapes.length > 0) {
+                shapeCache.set(shapeId, shapes);
+                updateShapes(shapes);
+            }
+        });
+    }
 }
 window.fetchShapes = fetchShapesForRoute;
 

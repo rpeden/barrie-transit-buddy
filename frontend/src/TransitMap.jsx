@@ -96,7 +96,7 @@ class TransitMap extends Component {
           /> }
         googleMapElement={
           <GoogleMap
-            ref={(map) => (this._googleMapComponent = map) && console.log(map.getZoom())}
+            ref={(map) => (this._googleMapComponent = map) /*&& console.log(map.getZoom())*/}
             defaultZoom={13}
             defaultCenter={{ lat: 44.389, lng: -79.688 }}
             onClick={::this.handleMapClick}
