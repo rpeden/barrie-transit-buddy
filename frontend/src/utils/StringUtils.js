@@ -66,7 +66,8 @@ export const timeToLocalDate = (timeString, delay) => {
 };
 
 export const pluralize = (count, singular, plural) => {
-  if (count == 1) {
+  const singlarCount = 1;
+  if (count === singlarCount) {
     return singular;
   }
   return plural;
