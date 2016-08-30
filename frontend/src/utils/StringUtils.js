@@ -1,7 +1,7 @@
 import moment from "../../vendor/moment-timezone";
 
 export const toTitleCase = function (origStr) {
-  let str = origStr.replace(/([^\W_]+[^\s-\/]*) */g, function (txt) {
+  let str = origStr.replace(/([^\W_]+[^\s-\/]*) */g, (txt) => {
     const firstCharPos = 0;
     const substCharPos = 1;
     return txt.charAt(firstCharPos).toUpperCase() + txt.substr(substCharPos).toLowerCase();
@@ -12,7 +12,7 @@ export const toTitleCase = function (origStr) {
   const lowers = ["A", "An", "The", "And", "But", "Or", "For", "Nor", "As", "At",
   "By", "For", "From", "In", "Into", "Near", "Of", "On", "Onto", "To", "With"];
   for (let i = 0, j = lowers.length; i < j; i++) {
-    str = str.replace(new RegExp("\\s" + lowers[i] + "\\s", "g"),
+    str = str.replace(new RegExp(`\\s${lowers[i]}\\s`, "g"),
       (txt) => {
         return txt.toLowerCase();
       });
@@ -21,7 +21,7 @@ export const toTitleCase = function (origStr) {
   // Certain words such as initials or acronyms should be left uppercase
   const uppers = ["Id", "Tv", "Rvh"];
   for (let i = 0, j = uppers.length; i < j; i++) {
-    str = str.replace(new RegExp("\\b" + uppers[i] + "\\b", "g"),
+    str = str.replace(new RegExp(`\\b"${uppers[i]}\\b`, "g"),
       uppers[i].toUpperCase());
   }
   return str;
@@ -41,7 +41,8 @@ export const toMinutesFromNow = (futureDate) => {
   const timeDiffMinutes = Math.floor(
       (timeDiffSeconds - (secondsPerHour * timeDiffHours)) / secondsPerMinute);
 
-  const diffString = `${timeDiffHours > 0 ? `${timeDiffHours}h ` : ""}` +
+  const minimumDiffHours = 1;
+  const diffString = `${timeDiffHours >= minimumDiffHours ? `${timeDiffHours}h ` : ""}` +
       `${timeDiffMinutes} min`;
   return diffString;
 };

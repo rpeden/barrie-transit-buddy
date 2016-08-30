@@ -3,6 +3,7 @@ import { toMinutesFromNow, timeToLocalDate } from "../utils/StringUtils";
 import _ from "lodash";
 import socket from "../SocketIO.js";
 import ShapeCache from "../utils/ShapeCache.js";
+import { Times } from "../utils/Constants.js";
 
 export const actions = {
   FETCH_STOPS_FOR_ROUTE: "FetchStopsForRoute",
@@ -17,10 +18,50 @@ export const actions = {
   UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals"
 };
 
+const updateArrivalTimes = (trips) => {
+  const updatedTrips = trips.map((trip) => {
+    const updatedTime = toMinutesFromNow(timeToLocalDate(trip.scheduledString));
+    return Object.assign(trip, { departureTime: updatedTime });
+  });
+  return updatedTrips;
+};
+
+const listenForData = (tripId, stopNum) => {
+
+  socket.on(`${stopNum}/${tripId}`, (data) => {
+    const bufferSize = 10;
+    const trips = store.getState().arrivals;
+    const arrival = JSON.parse(data);
+    const trip = _.find(trips, (t) => t.tripId === tripId);
+    const rest = _.filter(trips, (t) => t.tripId !== tripId);
+
+    if (!trip.hasOwnProperty("delays")) {
+      trip.delays = [];
+    }
+    if (trip.delays.length >= bufferSize) {
+      trip.delays = _.take(trip.delays, bufferSize);
+    }
+
+    trip.delays.push(arrival.delay || Times.DEFAULT_DELAY_SECONDS);
+
+    const departureTime = timeToLocalDate(trip.scheduledString);
+    departureTime.add(_.mean(trip.delays), "seconds");
+
+    const diffString = toMinutesFromNow(departureTime);
+
+    trip.departureTime = diffString;//departureTime.format('h:mm a');
+
+    store.dispatch({
+      type: actions.UPDATE_ARRIVAL_TIMES,
+      arrivals: [].concat(trip).concat(updateArrivalTimes(rest))
+    });
+  });
+};
+
 export const fetchStopsForRoute = function (routeId) {
-  const stopUrl = "/routes/" + routeId + "/stops";
+  const stopUrl = `/routes/${routeId}/stops`;
   fetch(stopUrl).then((response) => response.json())
-                  .then(function (stops) {
+                  .then((stops) => {
                     store.dispatch({
                       type: actions.UPDATE_STOPS,
                       stops
@@ -29,10 +70,7 @@ export const fetchStopsForRoute = function (routeId) {
 };
 
 export const fetchArrivalTimes = (routeId, stopId) => {
-  const arrivalsUrl = ("/routes/" + routeId
-        + "/stops/"
-        + stopId
-        + "/trips");
+  const arrivalsUrl = (`/routes/${routeId}/stops/${stopId}/trips`);
 
   fetch(arrivalsUrl).then((data) => {
     return data.json();
@@ -52,12 +90,12 @@ export const fetchArrivalTimes = (routeId, stopId) => {
                 };
               }).value();
 
-    if (_.isEmpty(trips)) {
+    if (!_.isEmpty(trips)) {
       store.dispatch({
         type: actions.UPDATE_ARRIVAL_TIMES,
         arrivals: filteredTrips
       });
-      listenForData(trips[0].trip_id, stopId);
+      listenForData(_.head(trips).trip_id, stopId);
     }
   });
 };
@@ -69,20 +107,22 @@ export const fetchShapesForRoute = (shapeId) => {
     store.dispatch({
       type: actions.UPDATE_SHAPES,
       shapes: shapes.map((shape) => {
+        // eslint-disable-next-line no-undef
         return new google.maps.LatLng(shape.shape_pt_lat, shape.shape_pt_lon);
       })
     });
   };
 
   if (shapeCache.get(shapeId)) {
+    // workaround until adding redux-thunk or sagas
     setTimeout(() => {
       updateShapes(shapeCache.get(shapeId));
-    }, 1);
+    }, 1); // eslint-disable-line no-magic-numbers
   } else {
-    const shapesUrl = "/routes/" + shapeId + "/shapes.json";
+    const shapesUrl = `/routes/${shapeId}/shapes.json`;
     fetch(shapesUrl).then((data) => data.json())
             .then((shapes) => {
-              if (shapes.length > 0) {
+              if (!_.isEmpty(shapes)) {
                 shapeCache.set(shapeId, shapes);
                 updateShapes(shapes);
               }
@@ -90,46 +130,6 @@ export const fetchShapesForRoute = (shapeId) => {
   }
 };
 window.fetchShapes = fetchShapesForRoute;
-
-const updateArrivalTimes = (trips) => {
-  const updatedTrips = trips.map((trip) => {
-    const updatedTime = toMinutesFromNow(timeToLocalDate(trip.scheduledString));
-    return Object.assign(trip, { departureTime: updatedTime });
-  });
-  return updatedTrips;
-};
-
-const listenForData = (tripId, stopNum) => {
-
-  socket.on(stopNum + "/" + tripId, (data) => {
-    const bufferSize = 10;
-    const trips = store.getState().arrivals;
-    const arrival = JSON.parse(data);
-    const trip = _.find(trips, (t) => t.tripId === tripId);
-    const rest = _.filter(trips, (t) => t.tripId !== tripId);
-
-    if (!trip.hasOwnProperty("delays")) {
-      trip.delays = [];
-    }
-    if (trip.delays.length >= bufferSize) {
-      trip.delays = _.take(trip.delays, bufferSize);
-    }
-
-    trip.delays.push(arrival.delay || 0);
-
-    const departureTime = timeToLocalDate(trip.scheduledString);
-    departureTime.add(_.mean(trip.delays), "seconds");
-
-    const diffString = toMinutesFromNow(departureTime);
-
-    trip.departureTime = diffString;//departureTime.format('h:mm a');
-
-    store.dispatch({
-      type: actions.UPDATE_ARRIVAL_TIMES,
-      arrivals: [].concat(trip).concat(updateArrivalTimes(rest))
-    });
-  });
-};
 
 export const subscribeToStop = (stopId) => {
   socket.emit("stop-subscribe", stopId);

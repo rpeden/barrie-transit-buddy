@@ -1,17 +1,19 @@
 import { Component } from "react";
-import React from "react";
+import { Dimensions } from "./utils/Constants";
 import _ from "lodash";
 
 class HeightResizingComponent extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.handleResize = _.throttle(::this.handleResize, 500);
+
+    const throttleDurationMillis = 500;
+    this.handleResize = _.throttle(::this.handleResize, throttleDurationMillis);
   }
 
-  handleResize(e) {
-    this.setState({height: window.innerHeight - 64 + "px",
-                   maxHeight: window.innerHeight - 64 + "px"});
+  handleResize() {
+    this.setState({height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`,
+                   maxHeight: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`});
   }
 
   componentDidMount() {

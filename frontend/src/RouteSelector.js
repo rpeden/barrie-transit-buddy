@@ -6,6 +6,7 @@ import { hashHistory } from "react-router";
 import { toTitleCase } from "./utils/StringUtils.js";
 import { connect } from "react-redux";
 import { fetchStops, fetchRouteShapes, clearShapes } from "./store/ActionCreators";
+import { Dimensions, Times } from "./utils/Constants";
 
 
 class RouteSelector extends HeightResizingComponent {
@@ -14,7 +15,7 @@ class RouteSelector extends HeightResizingComponent {
     super(props, context);
 
     this.state = {
-      height: window.innerHeight - 64 + "px"
+      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`
     };
   }
 
@@ -49,17 +50,6 @@ class RouteSelector extends HeightResizingComponent {
       backgroundColor: "white",
       color: "black"
     };
-    const buttonContainerStyle = {
-      width: "90%",
-      textAlign: "right",
-      marginTop: "45px"
-    };
-    const routeSelectionStyle = {
-      width: "85%",
-      marginLeft: "auto",
-      marginRight: "auto",
-      marginTop: "15px"
-    };
 
     return (
           <div style={divStyle}>
@@ -88,11 +78,12 @@ const mapDispatchToProps = (dispatch) => {
     onRouteClick: (routeId, stopName) => {
       const fetchAction = fetchStops(routeId);
       dispatch(fetchAction);
+
+      const encodedStop = encodeURIComponent(stopName);
+      const navUrl = `/stops/${routeId}/${encodedStop}`;
       setTimeout(() => {
-        hashHistory.push("/stops/" + routeId
-                                     + "/"
-                                     + encodeURIComponent(stopName));
-      }, 350);
+        hashHistory.push(navUrl);
+      }, Times.NAVIGATION_DELAY_MS);
     },
     onRouteEnter: (routeId) => {
       const fetchShapesAction = fetchRouteShapes(routeId);
@@ -100,7 +91,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     onRouteLeave: (routeId) => {
       const clearShapesAction = clearShapes(routeId);
-      displatch(clearShapesAction);
+      dispatch(clearShapesAction);
     }
   };
 };

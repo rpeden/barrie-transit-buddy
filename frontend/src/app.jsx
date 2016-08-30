@@ -3,10 +3,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import TransitMap from "./TransitMap.jsx";
-import RouteSelector from "./RouteSelector.jsx";
-import StopSelector from "./StopSelector.jsx";
-import StopArrivalTimes from "./StopArrivalTimes.jsx";
+import TransitMap from "./TransitMap.js";
+import RouteSelector from "./RouteSelector.js";
+import StopSelector from "./StopSelector.js";
+import StopArrivalTimes from "./StopArrivalTimes.js";
 import AppHeader from "./AppHeader.jsx";
 import { Router, Route, hashHistory } from "react-router";
 import { Provider } from "react-redux";

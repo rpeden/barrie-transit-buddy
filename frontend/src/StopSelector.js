@@ -7,6 +7,7 @@ import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
 import { fetchArrivalTimes } from "./store/ActionCreators";
+import { Times } from "./utils/Constants";
 
 
 class StopSelector extends HeightResizingComponent {
@@ -34,7 +35,7 @@ class StopSelector extends HeightResizingComponent {
   onBackClick() {
     setTimeout(() => {
       hashHistory.goBack();
-    }, 350);
+    }, Times.NAVIGATION_DELAY_MS);
   }
 
   render() {
@@ -85,7 +86,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(fetchArrivalTimes(routeId, stopId));
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stopId}`);
-      }, 350);
+      }, Times.NAVIGATION_DELAY_MS);
     }
   };
 };

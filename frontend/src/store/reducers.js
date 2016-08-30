@@ -8,7 +8,8 @@ const initialState = {
   shapes: []
 };
 
-export function transitApp(state = initialState, action) {
+// eslint-disable-next-line max-statements
+export const transitApp = (state = initialState, action) => {
   if (action.type === actions.FETCH_STOPS_FOR_ROUTE) {
     fetchStopsForRoute(action.routeId);
     return state;
@@ -42,6 +43,6 @@ export function transitApp(state = initialState, action) {
   }
 
   return state;
-}
+};
 
 export default transitApp;

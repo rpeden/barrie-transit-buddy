@@ -5,13 +5,12 @@ import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
 import IconButton from "material-ui/IconButton";
 import NavigationArrowBack from "material-ui/svg-icons/navigation/arrow-back";
-import $ from "jquery";
 import _ from "lodash";
-import socket from "./SocketIO.js";
 import { hashHistory } from "react-router";
 import { toMinutesFromNow, timeToLocalDate, pluralize } from "./utils/StringUtils";
 import * as creators from "./store/ActionCreators";
 import { connect } from "react-redux";
+import { Dimensions, Times } from "./utils/Constants";
 
 
 class StopArrivalTimes extends HeightResizingComponent {
@@ -24,13 +23,12 @@ class StopArrivalTimes extends HeightResizingComponent {
       routeId: this.props.params.routeId,
       trips: [],
       arrivals: [],
-      height: window.innerHeight - 64 + "px"
+      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`
     };
 
-    this.arrivalsUrl = ("/routes/" + this.props.params.routeId
-                                   + "/stops/"
-                                   + this.props.params.stopId
-                                   + "/trips");
+    const routeId = this.props.params.routeId;
+    const stopId = this.props.params.stopId;
+    this.arrivalsUrl = (`/routes/${routeId}/stops/${stopId}/trips`);
 
     this.props.subscribeToStop(this.props.params.stopId);
   }
@@ -54,18 +52,20 @@ class StopArrivalTimes extends HeightResizingComponent {
   createArrivalsList() {
     return this.props.arrivals.map((trip) => {
       let text = "Scheduled";
+
+      const allowableDelaySeconds = 29;
       if (trip.delays) {
         const bufferedDelay = _.mean(trip.delays);
-        const onTime = bufferedDelay <= 29;
-        const early = bufferedDelay <= -29;
+        const onTime = bufferedDelay <= allowableDelaySeconds;
+        const early = bufferedDelay <= -(allowableDelaySeconds);
 
         if (onTime) {
           text = "On Time";
         } else if (early) {
-          const delay = Math.round(bufferedDelay / -60);
+          const delay = Math.round(bufferedDelay / Times.SECONDS_PER_MIN);
           text = `${delay} ${pluralize(delay, "min", "mins")} early`;
         } else {
-          const delay = Math.round(bufferedDelay / 60);
+          const delay = Math.round(bufferedDelay / Times.SECONDS_PER_MIN);
           text = `${delay} ${pluralize(delay, "min", "mins")} late`;
         }
       }
@@ -74,7 +74,7 @@ class StopArrivalTimes extends HeightResizingComponent {
         fontSize: "16px"
       };
 
-      const column = (text) => <TableRowColumn style={rowStyle}>{text}</TableRowColumn>;
+      const column = (rowText) => <TableRowColumn style={rowStyle}>{rowText}</TableRowColumn>;
 
       return (
                 <TableRow key={trip.tripId}>
@@ -88,7 +88,7 @@ class StopArrivalTimes extends HeightResizingComponent {
   onBackClick() {
     setTimeout(() => {
       hashHistory.goBack();
-    }, 350);
+    }, Times.NAVIGATION_DELAY_MS);
   }
 
   render() {
@@ -125,8 +125,8 @@ class StopArrivalTimes extends HeightResizingComponent {
               </ToolbarGroup>
               <ToolbarGroup lastChild style={{alignSelf: "center"}}>
                 <div>
-                    <div style={routeStyle}>{"Route " + this.props.params.routeId}</div>
-                    <div style={stopStyle}>{"Stop " + this.props.params.stopId}</div>
+                    <div style={routeStyle}>{`Route ${this.props.params.routeId}`}</div>
+                    <div style={stopStyle}>{`Stop " ${this.props.params.stopId}`}</div>
                 </div>
               </ToolbarGroup>
             </Toolbar>
