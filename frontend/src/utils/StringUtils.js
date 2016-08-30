@@ -46,15 +46,20 @@ export const toMinutesFromNow = (futureDate) => {
   return diffString;
 };
 
-export const timeToLocalDate = (timeString, delay = 0) => {
+export const timeToLocalDate = (timeString, delay) => {
+  const defaultDelay = 0;
   const timeSplit = timeString.split(":");
 
-  const tz = moment.tz("America/Toronto").hours(timeSplit[0])
-      .minutes(timeSplit[1])
-      .add(delay, "seconds");
+  const hourPosition = 0;
+  const minutePosition = 1;
+  const secondsPosition = 2;
+  const tz = moment.tz("America/Toronto").hours(timeSplit[hourPosition])
+      .minutes(timeSplit[minutePosition])
+      .add(delay || defaultDelay, "seconds");
 
-  if (timeSplit.length > 2) {
-    tz.seconds(timeSplit[2]);
+  const timeCountWithoutSeconds = 2;
+  if (timeSplit.length > timeCountWithoutSeconds) {
+    tz.seconds(timeSplit[secondsPosition]);
   }
 
   return tz;
