@@ -1,31 +1,31 @@
-import 'whatwg-fetch';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import "whatwg-fetch";
+import React from "react";
+import ReactDOM from "react-dom";
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TransitMap from './TransitMap.jsx';
-import RouteSelector from './RouteSelector.jsx';
-import StopSelector from './StopSelector.jsx';
-import StopArrivalTimes from './StopArrivalTimes.jsx';
-import AppHeader from './AppHeader.jsx';
-import { Router, Route, hashHistory } from 'react-router'
-import { Provider } from 'react-redux'
-import store from './store/store.js'
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import TransitMap from "./TransitMap.jsx";
+import RouteSelector from "./RouteSelector.jsx";
+import StopSelector from "./StopSelector.jsx";
+import StopArrivalTimes from "./StopArrivalTimes.jsx";
+import AppHeader from "./AppHeader.jsx";
+import { Router, Route, hashHistory } from "react-router";
+import { Provider } from "react-redux";
+import store from "./store/store.js";
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import theme from './utils/Theme.js'
+import injectTapEventPlugin from "react-tap-event-plugin";
+import theme from "./utils/Theme.js";
 
 injectTapEventPlugin();
 
 const Container = () => {
-  var style = {
-    display: 'flex'
-  }
+  const style = {
+    display: "flex"
+  };
   return (
     <Provider store={store}>
         <div>
           <div style={style}>
-            <div style={{display: 'flex', flexDirection: 'column', width: '300px'}}>
+            <div style={{display: "flex", flexDirection: "column", width: "300px"}}>
             <AppHeader title="Barrie Transit Buddy"/>
             <Router history={hashHistory}>
               <Route path="/" component={RouteSelector} />
@@ -37,8 +37,8 @@ const Container = () => {
           </div>
         </div>
     </Provider>
-  )
-}
+  );
+};
 
 const App = () => (
     <MuiThemeProvider muiTheme={theme}>
@@ -46,4 +46,4 @@ const App = () => (
     </MuiThemeProvider>
 );
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById("app"));

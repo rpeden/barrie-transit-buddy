@@ -1,24 +1,24 @@
-import { Component } from 'react';
-import React from 'react';
+import { Component } from "react";
+import React from "react";
 import { GoogleMapLoader, GoogleMap, Marker, Polyline } from "react-google-maps";
-import _ from 'lodash';
-import { connect } from 'react-redux'
+import _ from "lodash";
+import { connect } from "react-redux";
 
 class TransitMap extends Component {
   state = {
     markers: [{
       position: {
         lat: 44.389,
-        lng: -79.688,
+        lng: -79.688
       },
-      key: `Barrie`,
-      defaultAnimation: 2,
+      key: "Barrie",
+      defaultAnimation: 2
     }],
     width: window.innerWidth - 300 + "px",
     height: window.innerHeight + "px",
-    points: [new google.maps.LatLng(44.3403594369073,-79.6803241968155),
-             new google.maps.LatLng(44.3407047330346,-79.6801847219467),
-             new google.maps.LatLng(44.3410346807673,-79.6801847219467)]
+    points: [new google.maps.LatLng(44.3403594369073, -79.6803241968155),
+             new google.maps.LatLng(44.3407047330346, -79.6801847219467),
+             new google.maps.LatLng(44.3410346807673, -79.6801847219467)]
   }
 
   constructor(props, context) {
@@ -27,20 +27,20 @@ class TransitMap extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', ::this.handleWindowResize);
+    window.addEventListener("resize", ::this.handleWindowResize);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', ::this.handleWindowResize);
+    window.removeEventListener("resize", ::this.handleWindowResize);
   }
 
   handleWindowResize() {
-    console.log(`handleWindowResize`, this._googleMapComponent);
+    console.log("handleWindowResize", this._googleMapComponent);
     this.setState({
       width: window.innerWidth - 300 + "px",
       height: window.innerHeight + "px"
-    })
-    triggerEvent(this._googleMapComponent, `resize`);
+    });
+    triggerEvent(this._googleMapComponent, "resize");
   }
 
   /*
@@ -54,16 +54,16 @@ class TransitMap extends Component {
         {
           position: event.latLng,
           defaultAnimation: 2,
-          key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
-        },
-      ],
+          key: Date.now() // Add a key property for: http://fb.me/react-warning-keys
+        }
+      ]
     });
     this.setState({ markers });
 
     if (markers.length === 3) {
       this.props.toast(
-        `Right click on the marker to remove it`,
-        `Also check the code!`
+        "Right click on the marker to remove it",
+        "Also check the code!"
       );
     }
   }
@@ -77,8 +77,8 @@ class TransitMap extends Component {
     let { markers } = this.state;
     markers = update(markers, {
       $splice: [
-        [index, 1],
-      ],
+        [index, 1]
+      ]
     });
     this.setState({ markers });
   }
@@ -102,7 +102,7 @@ class TransitMap extends Component {
             onClick={::this.handleMapClick}
           >
 
-            <Polyline path={this.props.shapes} options={{geodesic:true, strokeColor:'#3366ff', strokeOpacity: 0.7, strokeWeight: 4}}/>
+            <Polyline path={this.props.shapes} options={{geodesic: true, strokeColor: "#3366ff", strokeOpacity: 0.7, strokeWeight: 4}}/>
           </GoogleMap>
         }
       />
@@ -111,16 +111,16 @@ class TransitMap extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
-        shapes: state.shapes
-    }
-}
+  return {
+    shapes: state.shapes
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-    }
-}
+  return {
+  };
+};
 
-const Map = connect(mapStateToProps,mapDispatchToProps)(TransitMap);
+const Map = connect(mapStateToProps, mapDispatchToProps)(TransitMap);
 
 export default Map;

@@ -1,6 +1,6 @@
-import { Component } from 'react';
-import React from 'react';
-import _ from 'lodash';
+import { Component } from "react";
+import React from "react";
+import _ from "lodash";
 
 class HeightResizingComponent extends Component {
 
@@ -15,11 +15,11 @@ class HeightResizingComponent extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', ::this.handleResize);
+    window.addEventListener("resize", ::this.handleResize);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', ::this.handleResize);
+    window.removeEventListener("resize", ::this.handleResize);
   }
 }
 
