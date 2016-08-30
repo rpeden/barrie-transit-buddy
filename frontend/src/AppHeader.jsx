@@ -11,5 +11,5 @@ export default function appHeader(props) {
 }
 
 appHeader.propTypes = {
-    PropTypes.string.isRequired
-}
+  title: PropTypes.string.isRequired
+};
