@@ -85,7 +85,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
       onRouteClick: (routeId, stopName) => {
-        fetchStops(routeId);
+        let fetchAction = fetchStops(routeId);
+        dispatch(fetchAction)
         setTimeout(() => {
           hashHistory.push("/stops/" + routeId
                                      + "/"

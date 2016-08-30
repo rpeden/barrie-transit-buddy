@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import store from './store.js'
 import { toMinutesFromNow, timeToLocalDate } from '../utils/StringUtils';
 import _ from 'lodash';
@@ -20,13 +19,13 @@ export const actions = {
 
 export const fetchStopsForRoute = function(routeId) {
     const stopUrl = "/routes/" + routeId + "/stops";
-    $.get(stopUrl, function (result) {
-        const stops = JSON.parse(result);
-        store.dispatch({
-            type: actions.UPDATE_STOPS,
-            stops: stops
-        })
-    });
+    fetch(stopUrl).then((response) => response.json())
+                  .then(function(stops) {
+                        store.dispatch({
+                            type: actions.UPDATE_STOPS,
+                            stops: stops
+                        })
+                  });
 }
 
 export const fetchArrivalTimes = (routeId, stopId) => {
@@ -35,21 +34,21 @@ export const fetchArrivalTimes = (routeId, stopId) => {
         + stopId
         + "/trips");
 
-    $.get(arrivalsUrl, function(data){
-        const trips = JSON.parse(data) || [];
+    fetch(arrivalsUrl).then((data) => {
+        return data.json();
+    }).then((trips) => {
+        const filteredTrips = _.chain(trips)
+              .take(5)
+              .map(trip => {
+                  let scheduledTime =
+                      toMinutesFromNow(timeToLocalDate(trip.departure_time))
 
-        var filteredTrips = _.chain(trips)
-            .take(5)
-            .map(trip => {
-                let scheduledTime =
-                    toMinutesFromNow(timeToLocalDate(trip.departure_time))
-
-                return {
-                    scheduledString: trip.departure_time,
-                    scheduledDepartureTime: scheduledTime,
-                    departureTime: scheduledTime,
-                    tripId: trip.trip_id
-                };
+                    return {
+                        scheduledString: trip.departure_time,
+                        scheduledDepartureTime: scheduledTime,
+                        departureTime: scheduledTime,
+                        tripId: trip.trip_id
+                    };
             }).value();
 
         if (trips.length > 0) {
@@ -57,10 +56,9 @@ export const fetchArrivalTimes = (routeId, stopId) => {
                 type: actions.UPDATE_ARRIVAL_TIMES,
                 arrivals: filteredTrips
             })
-            //subscribeToStop();
             listenForData(trips[0].trip_id, stopId);
         }
-    });
+    })
 }
 
 let shapeCache = new ShapeCache();
@@ -81,13 +79,13 @@ export const fetchShapesForRoute = (shapeId) => {
         }, 1);
     } else {
         const shapesUrl = "/routes/" + shapeId + "/shapes.json";
-        $.get(shapesUrl, (data) => {
-            const shapes = data || [];
-            if(shapes.length > 0) {
-                shapeCache.set(shapeId, shapes);
-                updateShapes(shapes);
-            }
-        });
+        fetch(shapesUrl).then(data => data.json())
+            .then((shapes) => {
+                if(shapes.length > 0) {
+                    shapeCache.set(shapeId, shapes);
+                    updateShapes(shapes);
+                }
+            })
     }
 }
 window.fetchShapes = fetchShapesForRoute;
@@ -112,16 +110,10 @@ const listenForData = (tripId, stopNum) => {
         const departureTime = timeToLocalDate(trip.scheduledString);
         departureTime.add(_.mean(trip["delays"]), 'seconds');
 
-        /*const updatedSeconds = departureTime.second();
-         if(updatedSeconds > 30) {
-         departureTime.add(1, 'minute');
-         }*/
-
         const diffString = toMinutesFromNow(departureTime);
 
         trip["departureTime"] = diffString;//departureTime.format('h:mm a');
 
-        //setState({trips: [].concat(trip).concat(updateArrivalTimes(rest)) });
         store.dispatch({
             type: actions.UPDATE_ARRIVAL_TIMES,
             arrivals: [].concat(trip).concat(updateArrivalTimes(rest))

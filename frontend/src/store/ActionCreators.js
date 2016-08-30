@@ -2,10 +2,10 @@ import store from './store'
 import { actions } from './actions'
 
 export const fetchStops = (routeId) => {
-    store.dispatch({
+    return {
         type: actions.FETCH_STOPS_FOR_ROUTE,
         routeId: routeId
-    });
+    };
 }
 
 export const fetchArrivalTimes = (routeId, stopId) => {
@@ -39,6 +39,6 @@ export const unsubscribeFromStop = (stopId) => {
 
 export const clearShapes = () => {
     return {
-        type: actions.CLEAR_SHAPES        
+        type: actions.CLEAR_SHAPES
     }
 }
