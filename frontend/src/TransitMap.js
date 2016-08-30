@@ -1,29 +1,23 @@
-import { Component } from "react";
+import { Component, PropTypes } from "react";
 import React from "react";
-import { GoogleMapLoader, GoogleMap, Marker, Polyline } from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Polyline } from "react-google-maps";
 import _ from "lodash";
 import { connect } from "react-redux";
+import { Dimensions, Times } from "../utils/Constants";
 
 class TransitMap extends Component {
   state = {
-    markers: [{
-      position: {
-        lat: 44.389,
-        lng: -79.688
-      },
-      key: "Barrie",
-      defaultAnimation: 2
-    }],
-    width: window.innerWidth - 300 + "px",
-    height: window.innerHeight + "px",
-    points: [new google.maps.LatLng(44.3403594369073, -79.6803241968155),
-             new google.maps.LatLng(44.3407047330346, -79.6801847219467),
-             new google.maps.LatLng(44.3410346807673, -79.6801847219467)]
+    width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX} px`,
+    height: `${window.innerHeight} px`
   }
+
+  static propTypes = {
+    shapes: PropTypes.array.isRequired
+  };
 
   constructor(props, context) {
     super(props, context);
-    this.handleWindowResize = _.throttle(::this.handleWindowResize, 500);
+    this.handleWindowResize = _.throttle(::this.handleWindowResize, Times.RESIZE_THROTTLE_MS);
   }
 
   componentDidMount() {
@@ -35,52 +29,10 @@ class TransitMap extends Component {
   }
 
   handleWindowResize() {
-    console.log("handleWindowResize", this._googleMapComponent);
     this.setState({
-      width: window.innerWidth - 300 + "px",
-      height: window.innerHeight + "px"
+      width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX} px`,
+      height: `${window.innerHeight} px`
     });
-    triggerEvent(this._googleMapComponent, "resize");
-  }
-
-  /*
-   * This is called when you click on the map.
-   * Go and try click now.
-   */
-  handleMapClick(event) {
-    let { markers } = this.state;
-    markers = update(markers, {
-      $push: [
-        {
-          position: event.latLng,
-          defaultAnimation: 2,
-          key: Date.now() // Add a key property for: http://fb.me/react-warning-keys
-        }
-      ]
-    });
-    this.setState({ markers });
-
-    if (markers.length === 3) {
-      this.props.toast(
-        "Right click on the marker to remove it",
-        "Also check the code!"
-      );
-    }
-  }
-
-  handleMarkerRightclick(index, event) {
-    /*
-     * All you modify is data, and the view is driven by data.
-     * This is so called data-driven-development. (And yes, it's now in
-     * web front end and even with google maps API.)
-     */
-    let { markers } = this.state;
-    markers = update(markers, {
-      $splice: [
-        [index, 1]
-      ]
-    });
-    this.setState({ markers });
   }
 
   render() {
@@ -101,8 +53,10 @@ class TransitMap extends Component {
             defaultCenter={{ lat: 44.389, lng: -79.688 }}
             onClick={::this.handleMapClick}
           >
-
-            <Polyline path={this.props.shapes} options={{geodesic: true, strokeColor: "#3366ff", strokeOpacity: 0.7, strokeWeight: 4}}/>
+            <Polyline path={this.props.shapes}
+              options={{geodesic: true, strokeColor: "#3366ff",
+                        strokeOpacity: 0.7, strokeWeight: 4}}
+            />
           </GoogleMap>
         }
       />
@@ -116,7 +70,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (/*dispatch*/) => {
   return {
   };
 };
