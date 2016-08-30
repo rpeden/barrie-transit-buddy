@@ -13,9 +13,11 @@ class StopSelector extends HeightResizingComponent {
 
   constructor(props) {
     super(props);
+
+    const appBarHeight = 64;
     this.state = {
       stops: [],
-      height: window.innerHeight - 64 + "px"
+      height: `${window.innerHeight - appBarHeight} px`
     };
   }
 
@@ -27,13 +29,6 @@ class StopSelector extends HeightResizingComponent {
         onClick={() => { this.props.onStopClick(routeId, stop.stop_id); }}
               />);
     });
-  }
-
-  onStopClick(stopId) {
-    const routeId = this.props.params.routeId;
-    setTimeout(() => {
-      hashHistory.push(`/arrivals/${routeId}/${stopId}`);
-    }, 350);
   }
 
   onBackClick() {
