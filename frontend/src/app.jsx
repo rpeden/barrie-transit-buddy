@@ -1,6 +1,7 @@
 import "whatwg-fetch";
 import React from "react";
 import ReactDOM from "react-dom";
+import store from "./store/store.js";
 
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import TransitMap from "./TransitMap.js";
@@ -10,7 +11,7 @@ import StopArrivalTimes from "./StopArrivalTimes.js";
 import AppHeader from "./AppHeader.jsx";
 import { Router, Route, hashHistory } from "react-router";
 import { Provider } from "react-redux";
-import store from "./store/store.js";
+
 
 import injectTapEventPlugin from "react-tap-event-plugin";
 import theme from "./utils/Theme.js";

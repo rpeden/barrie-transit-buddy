@@ -11,8 +11,8 @@ class HeightResizingComponent extends Component {
   }
 
   handleResize() {
-    this.setState({height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`,
-                   maxHeight: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`});
+    this.setState({height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX}px`,
+                   maxHeight: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX}px`});
   }
 
   componentDidMount() {
