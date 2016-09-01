@@ -6,29 +6,26 @@ import { connect } from "react-redux";
 import { Dimensions, Times } from "./utils/Constants";
 
 class TransitMap extends Component {
-  state = {
-    width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX}px`,
-    height: `${window.innerHeight}px`
-  }
-
-  static propTypes = {
-    shapes: PropTypes.array.isRequired
-  };
 
   constructor(props, context) {
     super(props, context);
-    this.handleWindowResize = _.throttle(::this.handleWindowResize, Times.RESIZE_THROTTLE_MS);
+    this.handleWindowResize = _.throttle(this.handleWindowResize, Times.RESIZE_THROTTLE_MS);
+
+    this.state = {
+      width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX}px`,
+      height: `${window.innerHeight}px`
+    };
   }
 
   componentWillMount() {
     this.handleWindowResize();
   }
   componentDidMount() {
-    window.addEventListener("resize", ::this.handleWindowResize);
+    window.addEventListener("resize", this.handleWindowResize.bind(this));
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", ::this.handleWindowResize);
+    window.removeEventListener("resize", this.handleWindowResize(this));
   }
 
   handleWindowResize() {

@@ -7,7 +7,7 @@ class HeightResizingComponent extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.handleResize = _.throttle(::this.handleResize, Times.RESIZE_THROTTLE_MS);
+    this.handleResize = _.throttle(this.handleResize, Times.RESIZE_THROTTLE_MS);
   }
 
   handleResize() {
@@ -16,11 +16,11 @@ class HeightResizingComponent extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", ::this.handleResize);
+    window.addEventListener("resize", this.handleResize.bind(this));
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", ::this.handleResize);
+    window.removeEventListener("resize", this.handleResize.bind(this));
   }
 }
 

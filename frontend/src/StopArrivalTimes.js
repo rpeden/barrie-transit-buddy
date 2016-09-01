@@ -119,7 +119,7 @@ class StopArrivalTimes extends HeightResizingComponent {
         <div style={divStyle}>
             <Toolbar style={{justifyContent: "auto"}}>
               <ToolbarGroup firstChild>
-                <IconButton onClick={::this.onBackClick} style={{marginTop: "5px"}}>
+                <IconButton onClick={this.onBackClick.bind(this)} style={{marginTop: "5px"}}>
                   <NavigationArrowBack />
                 </IconButton>
               </ToolbarGroup>
