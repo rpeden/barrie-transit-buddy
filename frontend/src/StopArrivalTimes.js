@@ -23,7 +23,7 @@ class StopArrivalTimes extends HeightResizingComponent {
       routeId: this.props.params.routeId,
       trips: [],
       arrivals: [],
-      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`
+      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX}px`
     };
 
     const routeId = this.props.params.routeId;
@@ -126,7 +126,7 @@ class StopArrivalTimes extends HeightResizingComponent {
               <ToolbarGroup lastChild style={{alignSelf: "center"}}>
                 <div>
                     <div style={routeStyle}>{`Route ${this.props.params.routeId}`}</div>
-                    <div style={stopStyle}>{`Stop " ${this.props.params.stopId}`}</div>
+                    <div style={stopStyle}>{`Stop ${this.props.params.stopId}`}</div>
                 </div>
               </ToolbarGroup>
             </Toolbar>
@@ -152,7 +152,7 @@ class StopArrivalTimes extends HeightResizingComponent {
 
 const mapStateToProps = (state) => {
   return {
-    arrivals: state.arrivals
+    arrivals: state.app.arrivals
   };
 };
 

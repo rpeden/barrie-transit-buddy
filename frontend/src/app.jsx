@@ -11,6 +11,7 @@ import StopArrivalTimes from "./StopArrivalTimes.js";
 import AppHeader from "./AppHeader.jsx";
 import { Router, Route, hashHistory } from "react-router";
 import { Provider } from "react-redux";
+import { syncHistoryWithStore } from "react-router-redux";
 
 
 import injectTapEventPlugin from "react-tap-event-plugin";
@@ -22,13 +23,16 @@ const Container = () => {
   const style = {
     display: "flex"
   };
+
+  const history = syncHistoryWithStore(hashHistory, store);
+
   return (
     <Provider store={store}>
         <div>
           <div style={style}>
             <div style={{display: "flex", flexDirection: "column", width: "300px"}}>
             <AppHeader title="Barrie Transit Buddy"/>
-            <Router history={hashHistory}>
+            <Router history={history}>
               <Route path="/" component={RouteSelector} />
               <Route path="/arrivals/:routeId/:stopId" component={StopArrivalTimes} />
               <Route path="/stops/:routeId/:routeName" component={StopSelector} />

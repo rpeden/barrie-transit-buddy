@@ -6,8 +6,9 @@ import NavigationArrowBack from "material-ui/svg-icons/navigation/arrow-back";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
-import { fetchArrivalTimes } from "./store/ActionCreators";
+import { fetchArrivalTimes, clearStops, fetchStops } from "./store/ActionCreators";
 import { Times } from "./utils/Constants";
+import _ from "lodash";
 
 
 class StopSelector extends HeightResizingComponent {
@@ -18,8 +19,18 @@ class StopSelector extends HeightResizingComponent {
     const appBarHeight = 64;
     this.state = {
       stops: [],
-      height: `${window.innerHeight - appBarHeight} px`
+      height: `${window.innerHeight - appBarHeight}px`
     };
+  }
+
+  componentWillMount() {
+    if (!this.props.stops || _.isEmpty(this.props.stops)) {
+      this.props.fetchStops(this.props.params.routeId);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.clearStops();
   }
 
   createStopList() {
@@ -76,7 +87,7 @@ class StopSelector extends HeightResizingComponent {
 
 const mapStateToProps = (state) => {
   return {
-    stops: state.stops
+    stops: state.app.stops
   };
 };
 
@@ -87,6 +98,14 @@ const mapDispatchToProps = (dispatch) => {
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stopId}`);
       }, Times.NAVIGATION_DELAY_MS);
+    },
+    fetchStops: (routeId) => {
+      const fetchAction = fetchStops(routeId);
+      dispatch(fetchAction);
+    },
+    clearStops: () => {
+      const clearAction = clearStops();
+      dispatch(clearAction);
     }
   };
 };

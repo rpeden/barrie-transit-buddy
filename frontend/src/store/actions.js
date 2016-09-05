@@ -15,7 +15,9 @@ export const actions = {
   CLEAR_STOPS: "ClearStops",
   CLEAR_SHAPES: "ClearShapes",
   SUBSCRIBE_STOP_ARRIVALS: "SubscribeStopArrivals",
-  UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals"
+  UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals",
+  UPDATE_SELECTED_ROUTE: "UpdatedSelectedRoute",
+  CLEAR_SELECTED_ROUTE: "ClearSelctedRoute"
 };
 
 const updateArrivalTimes = (trips) => {
@@ -65,6 +67,10 @@ export const fetchStopsForRoute = function (routeId) {
                     store.dispatch({
                       type: actions.UPDATE_STOPS,
                       stops
+                    });
+                    store.dispatch({
+                      type: actions.UPDATE_SELECTED_ROUTE,
+                      routeId
                     });
                   });
 };

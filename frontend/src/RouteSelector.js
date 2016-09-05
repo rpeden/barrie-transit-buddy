@@ -15,7 +15,7 @@ class RouteSelector extends HeightResizingComponent {
     super(props, context);
 
     this.state = {
-      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX} + px`
+      height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX}px`
     };
   }
 
@@ -28,12 +28,13 @@ class RouteSelector extends HeightResizingComponent {
       const text = `${el.route_short_name} ${toTitleCase(el.route_long_name)}`;
       const handler = () => this.props.onRouteClick(el.route_id, text);
 
-      return (<ListItem value={{routeId: el.route_id, name: text}}
-        key={el.id}
-        primaryText={text}
-        onMouseEnter={() => { onRouteEnter(el.shape_id); }}
-        onClick={handler}
-              />);
+      return (
+        <ListItem value={{routeId: el.route_id, name: text}}
+          key={el.id}
+          primaryText={text}
+          onMouseEnter={() => { onRouteEnter(el.shape_id); }}
+          onClick={handler}
+        />);
     });
     return routes;
   }
@@ -69,7 +70,7 @@ class RouteSelector extends HeightResizingComponent {
 
 const mapStateToProps = (state) => {
   return {
-    routes: state.routes
+    routes: state.app.routes
   };
 };
 

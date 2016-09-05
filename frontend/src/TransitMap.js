@@ -1,9 +1,12 @@
 import { Component, PropTypes } from "react";
 import React from "react";
-import { GoogleMapLoader, GoogleMap, Polyline } from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "react-google-maps";
 import _ from "lodash";
 import { connect } from "react-redux";
+import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
+import { fetchArrivalTimes } from "./store/ActionCreators";
+
 
 class TransitMap extends Component {
 
@@ -35,28 +38,64 @@ class TransitMap extends Component {
     });
   }
 
+  onStopMarkerClick(stop) {
+    this.props.onStopClick(this.props.selectedRoute, stop.stop_id);
+  }
+
+  onStopMarkerHover(stop) {
+    // eslint-disable-next-line
+    console.log("stop: " + stop.stop_name);
+    this.setState({ stopNameToShow: stop.stop_name });
+  }
+
+  onStopMarkerExit() {
+    this.setState({ stopNameToShow: "" });
+  }
+
+  renderStopName() {
+    if (this.state.stopNameToShow) {
+      return (
+        <div style={{position: "fixed", top: "20px", right: "20px", zIndex: 50 }}>
+          {this.state.stopNameToShow}
+        </div>
+      );
+    } else {
+      return <span />;
+    }
+  }
+
+  displayStops() {
+    return this.props.stops.map((stop) => {
+      return (
+        <Marker
+          key={stop.stop_id}
+          position={{lat: stop.stop_lat, lng: stop.stop_lon}}
+          onClick={this.onStopMarkerClick.bind(this, stop)}
+          onMouseover={this.onStopMarkerHover.bind(this, stop)}
+          onMouseOut={this.onStopMarkerExit.bind(this)}
+        />
+      );
+    });
+  }
+
   render() {
     return (
       <GoogleMapLoader
         containerElement={
-          <div
-
-            style={{
-              height: this.state.height,
-              width: this.state.width
-            }}
-          /> }
+          <div style={{ height: this.state.height, width: this.state.width }} />}
         googleMapElement={
           <GoogleMap
             ref={(map) => (this._googleMapComponent = map) /*&& console.log(map.getZoom())*/}
             defaultZoom={13}
             defaultCenter={{ lat: 44.389, lng: -79.688 }}
-            onClick={() => {}}
+            //onClick={() => {}}
           >
             <Polyline path={this.props.shapes}
               options={{geodesic: true, strokeColor: "#3366ff",
                         strokeOpacity: 0.7, strokeWeight: 4}}
             />
+            {this.displayStops()}
+            {this.renderStopName()}
           </GoogleMap>
         }
       />
@@ -65,17 +104,27 @@ class TransitMap extends Component {
 }
 
 TransitMap.propTypes = {
-  shapes: PropTypes.array.isRequired
+  shapes: PropTypes.array.isRequired,
+  stops: PropTypes.array.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-    shapes: state.shapes
+    shapes: state.app.shapes,
+    stops: state.app.stops,
+    selectedRoute: state.app.selectedRoute
+    //view: state.view
   };
 };
 
-const mapDispatchToProps = (/*dispatch*/) => {
+const mapDispatchToProps = (dispatch) => {
   return {
+    onStopClick: (routeId, stopId) => {
+      dispatch(fetchArrivalTimes(routeId, stopId));
+      setTimeout(() => {
+        hashHistory.push(`/arrivals/${routeId}/${stopId}`);
+      }, Times.NAVIGATION_DELAY_MS);
+    }
   };
 };
 

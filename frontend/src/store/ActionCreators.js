@@ -36,8 +36,21 @@ export const unsubscribeFromStop = (stopId) => {
   };
 };
 
+export const updateSelectedRoute = (routeId) => {
+  return {
+    type: actions.UPDATE_SELECTED_ROUTE,
+    routeId
+  };
+};
+
 export const clearShapes = () => {
   return {
     type: actions.CLEAR_SHAPES
+  };
+};
+
+export const clearStops = () => {
+  return {
+    type: actions.CLEAR_STOPS
   };
 };
