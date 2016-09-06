@@ -32,7 +32,7 @@ const listenForData = (tripId, stopNum) => {
 
   socket.on(`${stopNum}/${tripId}`, (data) => {
     const bufferSize = 10;
-    const trips = store.getState().arrivals;
+    const trips = store.getState().app.arrivals;
     const arrival = JSON.parse(data);
     const trip = _.find(trips, (t) => t.tripId === tripId);
     const rest = _.filter(trips, (t) => t.tripId !== tripId);

@@ -18,6 +18,9 @@ class TransitMap extends Component {
       width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX}px`,
       height: `${window.innerHeight}px`
     };
+
+    window.updateMap = this.updateMapBoundaries.bind(this);
+    window.resetMap = this.resetMap.bind(this);
   }
 
   componentWillMount() {
@@ -64,6 +67,24 @@ class TransitMap extends Component {
     }
   }
 
+  updateMapBoundaries() {
+    const bounds = new google.maps.LatLngBounds();
+    this.props.shapes.forEach((shape) => {
+      bounds.extend(shape);
+    });
+    this._googleMapComponent.fitBounds(bounds);
+  }
+
+  resetMap() {
+    /* eslint-disable no-magic-numbers */
+    const swPoint = new google.maps.LatLng(44.317216, -79.751301);
+    const nePoint = new google.maps.LatLng(44.431083, -79.607964);
+    /* eslint-enable no-magic-numbers */
+    const bounds = new google.maps.LatLngBounds(swPoint, nePoint);
+
+    this._googleMapComponent.fitBounds(bounds);
+  }
+
   displayStops() {
     return this.props.stops.map((stop) => {
       return (
@@ -105,7 +126,9 @@ class TransitMap extends Component {
 
 TransitMap.propTypes = {
   shapes: PropTypes.array.isRequired,
-  stops: PropTypes.array.isRequired
+  stops: PropTypes.array.isRequired,
+  onStopClick: PropTypes.func.isRequired,
+  selectedRoute: PropTypes.string.isRequired
 };
 
 const mapStateToProps = (state) => {

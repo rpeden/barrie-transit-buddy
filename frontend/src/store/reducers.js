@@ -3,6 +3,7 @@ import { actions, fetchStopsForRoute, fetchArrivalTimes, fetchShapesForRoute,
 
 const initialState = {
   routes: window.routes,
+  selectedRoute: "",
   stops: [],
   arrivals: [],
   shapes: []
