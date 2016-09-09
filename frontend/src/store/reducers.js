@@ -1,5 +1,6 @@
 import { actions, fetchStopsForRoute, fetchArrivalTimes, fetchShapesForRoute,
-         subscribeToStop, unsubscribeFromStop } from "./actions.js";
+         subscribeToStop, unsubscribeFromStop, subscribeToTripLocation,
+         unsubscribeFromTripLocation } from "./actions.js";
 
 const initialState = {
   routes: window.routes,
@@ -45,9 +46,15 @@ export const transitApp = (state = initialState, action) => {
     subscribeToStop(action.stopId);
     return state;
   }
+  if (action.type === actions.SUBSCRIBE_TRIP_LOCATION) {
+    subscribeToTripLocation(action.tripId);
+  }
   if (action.type === actions.UNSUBSCRIBE_STOP_ARRIVALS) {
     unsubscribeFromStop(action.stopId);
     return state;
+  }
+  if (action.type === actions.UNSUBSCRIBE_TRIP_LOCATION) {
+    unsubscribeFromTripLocation(action.tripId);
   }
 
   return state;

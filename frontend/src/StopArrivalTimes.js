@@ -31,6 +31,10 @@ class StopArrivalTimes extends HeightResizingComponent {
     this.arrivalsUrl = (`/routes/${routeId}/stops/${stopId}/trips`);
 
     this.props.subscribeToStop(this.props.params.stopId);
+    if (this.props.arrivals && !_.isEmpty(this.props.arrivals)) {
+      const nextTripId = _.head(this.props.arrivals).tripId;
+      this.props.subscribeToTripLocation(nextTripId);
+    }
   }
 
   getState() {
@@ -39,6 +43,11 @@ class StopArrivalTimes extends HeightResizingComponent {
 
   componentWillUnmount() {
     this.props.unsubscribeFromStop(this.props.params.stopId);
+
+    if (this.props.arrivals && !_.isEmpty(this.props.arrivals)) {
+      const nextTripId = _.head(this.props.arrivals).tripId;
+      this.props.unsubscribeFromTripLocation(nextTripId);
+    }
   }
 
   updateArrivalTimes(trips) {
@@ -161,8 +170,14 @@ const mapDispatchToProps = (dispatch) => {
     subscribeToStop: (stopId) => {
       dispatch(creators.subscribeToStop(stopId));
     },
+    subscribeToTripLocation: (tripId) => {
+      dispatch(creators.subscribeTripLocation(tripId));
+    },
     unsubscribeFromStop: (stopId) => {
       dispatch(creators.unsubscribeFromStop((stopId)));
+    },
+    unsubscribeFromTripLocation: (tripId) => {
+      dispatch(creators.unsubscribeTripLocation(tripId));
     }
   };
 };

@@ -15,7 +15,9 @@ export const actions = {
   CLEAR_STOPS: "ClearStops",
   CLEAR_SHAPES: "ClearShapes",
   SUBSCRIBE_STOP_ARRIVALS: "SubscribeStopArrivals",
+  SUBSCRIBE_TRIP_LOCATION: "SubscribeTripLocation",
   UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals",
+  UNSUBSCRIBE_TRIP_LOCATION: "UnsubscribeTripLocation",
   UPDATE_SELECTED_ROUTE: "UpdatedSelectedRoute",
   CLEAR_SELECTED_ROUTE: "ClearSelctedRoute"
 };
@@ -29,7 +31,10 @@ const updateArrivalTimes = (trips) => {
 };
 
 const listenForData = (tripId, stopNum) => {
-
+  socket.on(`trip${tripId}`, (data) => {
+    // eslint-disable-next-line no-console
+    console.log(`Trip ${tripId} location: ${JSON.stringify(data)}`);
+  });
   socket.on(`${stopNum}/${tripId}`, (data) => {
     const bufferSize = 10;
     const trips = store.getState().app.arrivals;
@@ -141,6 +146,14 @@ export const subscribeToStop = (stopId) => {
   socket.emit("stop-subscribe", stopId);
 };
 
+export const subscribeToTripLocation = (tripId) => {
+  socket.emit("trip-location-subscribe", tripId);
+};
+
 export const unsubscribeFromStop = (stopId) => {
   socket.emit("stop-unsubscribe", stopId);
+};
+
+export const unsubscribeFromTripLocation = (tripId) => {
+  socket.emit("trip-location-unsubscribe", tripId);
 };

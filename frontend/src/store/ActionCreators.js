@@ -29,6 +29,20 @@ export const subscribeToStop = (stopId) => {
   };
 };
 
+export const subscribeTripLocation = (tripId) => {
+  return {
+    type: actions.SUBSCRIBE_TRIP_LOCATION,
+    tripId
+  };
+};
+
+export const unsubscribeTripLocation = (tripId) => {
+  return {
+    type: actions.UNSUBSCRIBE_TRIP_LOCATION,
+    tripId
+  };
+};
+
 export const unsubscribeFromStop = (stopId) => {
   return {
     type: actions.UNSUBSCRIBE_STOP_ARRIVALS,
