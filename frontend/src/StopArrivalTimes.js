@@ -162,7 +162,8 @@ class StopArrivalTimes extends HeightResizingComponent {
 
 const mapStateToProps = (state) => {
   return {
-    arrivals: state.app.arrivals
+    arrivals: state.app.arrivals,
+    selectedStop: state.app.selectedStop
   };
 };
 

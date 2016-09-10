@@ -20,8 +20,10 @@ export const actions = {
   UNSUBSCRIBE_TRIP_LOCATION: "UnsubscribeTripLocation",
   UPDATE_SELECTED_ROUTE: "UpdatedSelectedRoute",
   UPDATE_SELECTED_STOP: "UpdateSelectedStop",
+  UPDATE_HIGHLIGHTED_STOP: "UpdateHighlightedStop",
   CLEAR_SELECTED_ROUTE: "ClearSelctedRoute",
-  CLEAR_SELECTED_STOP: "ClearSelectedStop"
+  CLEAR_SELECTED_STOP: "ClearSelectedStop",
+  CLEAR_HIGHLIGHTED_STOP: "ClearHighlightedStop"
 };
 
 const updateArrivalTimes = (trips) => {

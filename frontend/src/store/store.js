@@ -7,6 +7,6 @@ const reducers = combineReducers({
   routing: routerReducer
 });
 
-const store = createStore(reducers);
-
+const store = createStore(reducers, window.devToolsExtension && window.devToolsExtension());
+window.store = store;
 export default store;

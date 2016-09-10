@@ -7,7 +7,8 @@ import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
 import { fetchArrivalTimes, clearStops,
-  fetchStops, updateSelectedStop } from "./store/ActionCreators";
+  fetchStops, updateSelectedStop, clearSelectedStop, updateHighlightedStop,
+   clearHighlightedStop } from "./store/ActionCreators";
 import { Times } from "./utils/Constants";
 import _ from "lodash";
 
@@ -34,12 +35,21 @@ class StopSelector extends HeightResizingComponent {
     this.props.clearStops();
   }
 
+  onStopEnter(stop) {
+    this.props.updateHighlightedStop(stop);
+  }
+
+  onStopListLeave() {
+    this.props.clearHighlightedStop();
+  }
+
   createStopList() {
     const routeId = this.props.params.routeId;
     return this.props.stops.map((stop) => {
       return (<ListItem key={stop.stop_id}
         primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
-        onClick={() => { this.props.onStopClick(routeId, stop.stop_id); }}
+        onClick={() => { this.props.onStopClick(routeId, stop); }}
+        onMouseOver={this.onStopEnter.bind(this, stop)}
               />);
     });
   }
@@ -78,7 +88,7 @@ class StopSelector extends HeightResizingComponent {
         </Toolbar>
       </div>
       <div style={{flexGrow: 1, overflow: "auto"}}>
-      <List>
+      <List onMouseOut={this.onStopListLeave.bind(this)}>
         {this.createStopList()}
       </List>
       </div>
@@ -104,6 +114,15 @@ const mapDispatchToProps = (dispatch) => {
     fetchStops: (routeId) => {
       const fetchAction = fetchStops(routeId);
       dispatch(fetchAction);
+    },
+    updateHighlightedStop: (stop) => {
+      dispatch(updateHighlightedStop(stop));
+    },
+    clearHighlightedStop: () => {
+      dispatch(clearHighlightedStop());
+    },
+    clearSelectedStop: () => {
+      dispatch(clearSelectedStop());
     },
     clearStops: () => {
       const clearAction = clearStops();

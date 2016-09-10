@@ -94,12 +94,20 @@ class TransitMap extends Component {
   }
 
   displayStops() {
-    return this.props.stops.map((stop) => {
+    return this.props.stops.map((stop, idx) => {
+      let icon;
+      let zIndex = idx;
+      if (this.props.highlightedStop && this.props.highlightedStop.stop_id === stop.stop_id) {
+        icon = "/img/marker-blue-small.png";
+        zIndex = 1000;
+      }
       return (
         <Marker
           key={stop.stop_id}
           position={{lat: stop.stop_lat, lng: stop.stop_lon}}
+          icon={icon}
           onClick={this.onStopMarkerClick.bind(this, stop)}
+          zIndex={zIndex}
           onMouseover={this.onStopMarkerHover.bind(this, stop)}
           onMouseout={this.onStopMarkerExit.bind(this)}
         />
@@ -136,14 +144,16 @@ TransitMap.propTypes = {
   shapes: PropTypes.array.isRequired,
   stops: PropTypes.array.isRequired,
   onStopClick: PropTypes.func.isRequired,
-  selectedRoute: PropTypes.string.isRequired
+  selectedRoute: PropTypes.string.isRequired,
+  highlightedStop: PropTypes.object
 };
 
 const mapStateToProps = (state) => {
   return {
     shapes: state.app.shapes,
     stops: state.app.stops,
-    selectedRoute: state.app.selectedRoute
+    selectedRoute: state.app.selectedRoute,
+    highlightedStop: state.app.highlightedStop
     //view: state.view
   };
 };

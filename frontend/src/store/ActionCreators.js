@@ -63,6 +63,14 @@ export const updateSelectedStop = (stop) => {
     selectedStop: stop
   };
 };
+
+export const updateHighlightedStop = (stop) => {
+  return {
+    type: actions.UPDATE_HIGHLIGHTED_STOP,
+    highlightedStop: stop
+  };
+};
+
 export const clearShapes = () => {
   return {
     type: actions.CLEAR_SHAPES
@@ -72,5 +80,11 @@ export const clearShapes = () => {
 export const clearStops = () => {
   return {
     type: actions.CLEAR_STOPS
+  };
+};
+
+export const clearHighlightedStop = () => {
+  return {
+    type: actions.CLEAR_HIGHLIGHTED_STOP
   };
 };
