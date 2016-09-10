@@ -5,7 +5,8 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
-import { fetchArrivalTimes, updateSelectedStop } from "./store/ActionCreators";
+import { fetchArrivalTimes, updateSelectedStop,
+  updateHighlightedStop, clearHighlightedStop } from "./store/ActionCreators";
 
 
 class TransitMap extends Component {
@@ -42,17 +43,19 @@ class TransitMap extends Component {
   }
 
   onStopMarkerClick(stop) {
-    this.props.onStopClick(this.props.selectedRoute, stop.stop_id);
+    this.props.onStopClick(this.props.selectedRoute, stop);
   }
 
   onStopMarkerHover(stop) {
     // eslint-disable-next-line
-    console.log("stop: " + stop.stop_name);
+    //console.log("stop: " + stop.stop_name);
     this.setState({ stopNameToShow: stop.stop_name });
+    this.props.updateHighlightedStop(stop);
   }
 
   onStopMarkerExit() {
     this.setState({ stopNameToShow: "" });
+    this.props.clearHighlightedStop();
   }
 
   renderStopName() {
@@ -145,7 +148,9 @@ TransitMap.propTypes = {
   stops: PropTypes.array.isRequired,
   onStopClick: PropTypes.func.isRequired,
   selectedRoute: PropTypes.string.isRequired,
-  highlightedStop: PropTypes.object
+  highlightedStop: PropTypes.object,
+  updateHighlightedStop: PropTypes.func.isRequired,
+  clearHighlightedStop: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -166,6 +171,15 @@ const mapDispatchToProps = (dispatch) => {
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);
       }, Times.NAVIGATION_DELAY_MS);
+    },
+    updateHighlightedStop: (() => {
+      const updateHighlighted = (stop) => {
+        dispatch(updateHighlightedStop(stop));
+      };
+      return _.throttle(updateHighlighted, 100);
+    })(),
+    clearHighlightedStop: () => {
+      dispatch(clearHighlightedStop());
     }
   };
 };
