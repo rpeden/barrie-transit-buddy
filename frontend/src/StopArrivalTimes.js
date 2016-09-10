@@ -65,14 +65,15 @@ class StopArrivalTimes extends HeightResizingComponent {
       const allowableDelaySeconds = 29;
       if (trip.delays) {
         const bufferedDelay = _.mean(trip.delays);
-        const onTime = bufferedDelay <= allowableDelaySeconds;
-        const early = bufferedDelay <= -(allowableDelaySeconds);
+        const onTime = (bufferedDelay >= -(allowableDelaySeconds)) &&
+                       (bufferedDelay <= allowableDelaySeconds);
+        const early = bufferedDelay < -(allowableDelaySeconds);
 
         if (onTime) {
           text = "On Time";
         } else if (early) {
           const delay = Math.round(bufferedDelay / Times.SECONDS_PER_MIN);
-          text = `${delay} ${pluralize(delay, "min", "mins")} early`;
+          text = `${-delay} ${pluralize(-(delay), "min", "mins")} early`;
         } else {
           const delay = Math.round(bufferedDelay / Times.SECONDS_PER_MIN);
           text = `${delay} ${pluralize(delay, "min", "mins")} late`;

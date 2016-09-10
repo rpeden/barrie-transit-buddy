@@ -6,7 +6,8 @@ import NavigationArrowBack from "material-ui/svg-icons/navigation/arrow-back";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
-import { fetchArrivalTimes, clearStops, fetchStops } from "./store/ActionCreators";
+import { fetchArrivalTimes, clearStops,
+  fetchStops, updateSelectedStop } from "./store/ActionCreators";
 import { Times } from "./utils/Constants";
 import _ from "lodash";
 
@@ -93,10 +94,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onStopClick: (routeId, stopId) => {
-      dispatch(fetchArrivalTimes(routeId, stopId));
+    onStopClick: (routeId, stop) => {
+      dispatch(fetchArrivalTimes(routeId, stop.stop_id));
+      dispatch(updateSelectedStop(stop));
       setTimeout(() => {
-        hashHistory.push(`/arrivals/${routeId}/${stopId}`);
+        hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);
       }, Times.NAVIGATION_DELAY_MS);
     },
     fetchStops: (routeId) => {

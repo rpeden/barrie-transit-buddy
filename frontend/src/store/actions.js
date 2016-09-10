@@ -19,7 +19,9 @@ export const actions = {
   UNSUBSCRIBE_STOP_ARRIVALS: "UnsubscribeStopArrivals",
   UNSUBSCRIBE_TRIP_LOCATION: "UnsubscribeTripLocation",
   UPDATE_SELECTED_ROUTE: "UpdatedSelectedRoute",
-  CLEAR_SELECTED_ROUTE: "ClearSelctedRoute"
+  UPDATE_SELECTED_STOP: "UpdateSelectedStop",
+  CLEAR_SELECTED_ROUTE: "ClearSelctedRoute",
+  CLEAR_SELECTED_STOP: "ClearSelectedStop"
 };
 
 const updateArrivalTimes = (trips) => {
@@ -31,9 +33,9 @@ const updateArrivalTimes = (trips) => {
 };
 
 const listenForData = (tripId, stopNum) => {
-  socket.on(`trip${tripId}`, (data) => {
+  socket.on("location", (data) => {
     // eslint-disable-next-line no-console
-    console.log(`Trip ${tripId} location: ${JSON.stringify(data)}`);
+    console.log(`Trip location: ${JSON.stringify(data)}`);
   });
   socket.on(`${stopNum}/${tripId}`, (data) => {
     const bufferSize = 10;

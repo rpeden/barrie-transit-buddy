@@ -57,6 +57,12 @@ export const updateSelectedRoute = (routeId) => {
   };
 };
 
+export const updateSelectedStop = (stop) => {
+  return {
+    type: actions.UPDATE_SELECTED_STOP,
+    selectedStop: stop
+  };
+};
 export const clearShapes = () => {
   return {
     type: actions.CLEAR_SHAPES

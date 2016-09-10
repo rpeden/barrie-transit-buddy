@@ -5,7 +5,7 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
-import { fetchArrivalTimes } from "./store/ActionCreators";
+import { fetchArrivalTimes, updateSelectedStop } from "./store/ActionCreators";
 
 
 class TransitMap extends Component {
@@ -58,7 +58,15 @@ class TransitMap extends Component {
   renderStopName() {
     if (this.state.stopNameToShow) {
       return (
-        <div style={{position: "fixed", top: "20px", right: "20px", zIndex: 50 }}>
+        <div style={{ position: "fixed",
+                      fontSize: "18px",
+                      borderRadius: "5px",
+                      top: "20px",
+                      right: "20px",
+                      padding: "10px",
+                      backgroundColor: "rgba(0,0,0,0.75)",
+                      color: "#fff",
+                      zIndex: 50 }}>
           {this.state.stopNameToShow}
         </div>
       );
@@ -93,7 +101,7 @@ class TransitMap extends Component {
           position={{lat: stop.stop_lat, lng: stop.stop_lon}}
           onClick={this.onStopMarkerClick.bind(this, stop)}
           onMouseover={this.onStopMarkerHover.bind(this, stop)}
-          onMouseOut={this.onStopMarkerExit.bind(this)}
+          onMouseout={this.onStopMarkerExit.bind(this)}
         />
       );
     });
@@ -142,10 +150,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onStopClick: (routeId, stopId) => {
-      dispatch(fetchArrivalTimes(routeId, stopId));
+    onStopClick: (routeId, stop) => {
+      dispatch(fetchArrivalTimes(routeId, stop.stop_id));
+      dispatch(updateSelectedStop(stop));
       setTimeout(() => {
-        hashHistory.push(`/arrivals/${routeId}/${stopId}`);
+        hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);
       }, Times.NAVIGATION_DELAY_MS);
     }
   };
