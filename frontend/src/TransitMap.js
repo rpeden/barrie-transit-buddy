@@ -135,8 +135,8 @@ class TransitMap extends Component {
 
   resetMap() {
     /* eslint-disable no-magic-numbers */
-    const swPoint = new google.maps.LatLng(44.317216, -79.751301);
-    const nePoint = new google.maps.LatLng(44.431083, -79.607964);
+    const swPoint = new google.maps.LatLng(44.319172, -79.734391);
+    const nePoint = new google.maps.LatLng(44.422340, -79.610429);
     /* eslint-enable no-magic-numbers */
     const bounds = new google.maps.LatLngBounds(swPoint, nePoint);
 
