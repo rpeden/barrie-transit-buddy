@@ -22,6 +22,11 @@ class TransitMap extends Component {
 
     window.updateMap = this.updateMapBoundaries.bind(this);
     window.resetMap = this.resetMap.bind(this);
+
+    this.state = {
+      // eslint-disable-next-line
+      markers: {}
+    };
   }
 
   componentWillMount() {
@@ -29,6 +34,39 @@ class TransitMap extends Component {
   }
   componentDidMount() {
     window.addEventListener("resize", this.handleWindowResize.bind(this));
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.stops !== nextProps.stops) {
+      this.clearMarkers();
+      this.drawStopMarkers(nextProps.stops);
+    }
+
+    if (this.props.highlightedStop !== nextProps.highlightedStop) {
+      //not needed if there was no previously highlighted stop
+      if (this.props.highlightedStop) {
+        const markerInfo = this.state.markers[this.props.highlightedStop.stop_id];
+        if (markerInfo) {
+          markerInfo.marker.setIcon(null);
+          markerInfo.marker.setZIndex(markerInfo.zIndex);
+        }
+      }
+    }
+
+    if (nextProps.highlightedStop) {
+      const markerInfo = this.state.markers[nextProps.highlightedStop.stop_id];
+      if (markerInfo) {
+        markerInfo.marker.setIcon("/img/marker-blue-small.png");
+        // eslint-disable-next-line
+        markerInfo.marker.setZIndex(1000);
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.stops !== nextProps.stops ||
+           this.props.shapes !== nextProps.shapes ||
+           this.state.stopNameToShow !== nextState.stopNameToShow;
   }
 
   componentWillUnmount() {
@@ -56,6 +94,15 @@ class TransitMap extends Component {
   onStopMarkerExit() {
     this.setState({ stopNameToShow: "" });
     this.props.clearHighlightedStop();
+  }
+
+  clearMarkers() {
+    // eslint-disable-next-line
+    for (const stopId of Object.keys(this.state.markers)) {
+      const marker = this.state.markers[stopId].marker;
+      marker.setMap(null);
+      delete this.state.markers[stopId];
+    }
   }
 
   renderStopName() {
@@ -96,25 +143,49 @@ class TransitMap extends Component {
     this._googleMapComponent.fitBounds(bounds);
   }
 
+  drawStopMarkers(newStops) {
+    newStops.map((stop, idx) => {
+      const lat = stop.stop_lat;
+      const lng = stop.stop_lon;
+      const markerOptions = {
+        cursor: "pointer",
+        position: new google.maps.LatLng(lat, lng),
+        zIndex: idx,
+        map: this._googleMapComponent.getMap()
+      };
+      const marker = new google.maps.Marker(markerOptions);
+      google.maps.event.addListener(marker, "click",
+                                    this.onStopMarkerClick.bind(this, stop));
+      google.maps.event.addListener(marker, "mouseover",
+                                    this.onStopMarkerHover.bind(this, stop));
+      google.maps.event.addListener(marker, "mouseout",
+                                    this.onStopMarkerExit.bind(this, stop));
+      //eslint-disable-next-line
+      this.state.markers[stop.stop_id] = {
+        marker,
+        zIndex: idx
+      };
+    });
+  }
+
   displayStops() {
     return this.props.stops.map((stop, idx) => {
-      let icon;
-      let zIndex = idx;
-      if (this.props.highlightedStop && this.props.highlightedStop.stop_id === stop.stop_id) {
-        icon = "/img/marker-blue-small.png";
-        zIndex = 1000;
-      }
-      return (
-        <Marker
-          key={stop.stop_id}
-          position={{lat: stop.stop_lat, lng: stop.stop_lon}}
-          icon={icon}
-          onClick={this.onStopMarkerClick.bind(this, stop)}
-          zIndex={zIndex}
-          onMouseover={this.onStopMarkerHover.bind(this, stop)}
-          onMouseout={this.onStopMarkerExit.bind(this)}
-        />
-      );
+      const zIndex = idx;
+      let rawMarker;
+      const marker = (
+          <Marker
+            key={stop.stop_id}
+            ref={(ref) => { rawMarker = ref; }}
+            position={{lat: stop.stop_lat, lng: stop.stop_lon}}
+            onClick={this.onStopMarkerClick.bind(this, stop)}
+            zIndex={zIndex}
+            onMouseover={this.onStopMarkerHover.bind(this, stop)}
+            onMouseout={this.onStopMarkerExit.bind(this)}
+          />);
+      //const rawMarker = marker.getState().marker;
+      //rawMarker.setState({initialZIndex: zIndex});
+      this.state.markers.set(stop.stop_id, { zIndex, marker: rawMarker });
+      return marker;
     });
   }
 
@@ -134,7 +205,6 @@ class TransitMap extends Component {
               options={{geodesic: true, strokeColor: "#3366ff",
                         strokeOpacity: 0.7, strokeWeight: 4}}
             />
-            {this.displayStops()}
             {this.renderStopName()}
           </GoogleMap>
         }
@@ -172,12 +242,9 @@ const mapDispatchToProps = (dispatch) => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);
       }, Times.NAVIGATION_DELAY_MS);
     },
-    updateHighlightedStop: (() => {
-      const updateHighlighted = (stop) => {
-        dispatch(updateHighlightedStop(stop));
-      };
-      return _.throttle(updateHighlighted, 100);
-    })(),
+    updateHighlightedStop: (stop) => {
+      dispatch(updateHighlightedStop(stop));
+    },
     clearHighlightedStop: () => {
       dispatch(clearHighlightedStop());
     }
