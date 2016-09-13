@@ -48,6 +48,8 @@ class StopArrivalTimes extends HeightResizingComponent {
       const nextTripId = _.head(this.props.arrivals).tripId;
       this.props.unsubscribeFromTripLocation(nextTripId);
     }
+
+    this.props.clearStops();
   }
 
   updateArrivalTimes(trips) {
@@ -180,6 +182,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     unsubscribeFromTripLocation: (tripId) => {
       dispatch(creators.unsubscribeTripLocation(tripId));
+    },
+    clearStops: () => {
+      dispatch(creators.clearStops());
     }
   };
 };

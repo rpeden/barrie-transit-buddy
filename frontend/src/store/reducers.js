@@ -37,7 +37,10 @@ export const transitApp = (state = initialState, action) => {
     return Object.assign({}, state, { selectedRoute: action.routeId });
   }
   if (action.type === actions.UPDATE_SELECTED_STOP) {
-    return Object.assign({}, state, { selectedStop: action.selectedStop});
+    return Object.assign({}, state, {
+      selectedStop: action.selectedStop,
+      stops: [action.selectedStop]}
+    );
   }
   if (action.type === actions.UPDATE_HIGHLIGHTED_STOP) {
     return Object.assign({}, state, { highlightedStop: action.highlightedStop});

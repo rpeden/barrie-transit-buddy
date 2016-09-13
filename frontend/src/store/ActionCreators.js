@@ -88,3 +88,9 @@ export const clearHighlightedStop = () => {
     type: actions.CLEAR_HIGHLIGHTED_STOP
   };
 };
+
+export const clearSelectedStop = () => {
+  return {
+    type: actions.CLEAR_SELECTED_STOP
+  };
+};

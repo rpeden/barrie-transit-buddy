@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
 import { fetchArrivalTimes, updateSelectedStop,
-  updateHighlightedStop, clearHighlightedStop } from "./store/ActionCreators";
+  updateHighlightedStop, clearHighlightedStop, clearStops } from "./store/ActionCreators";
 
 
 class TransitMap extends Component {
@@ -237,6 +237,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onStopClick: (routeId, stop) => {
       dispatch(fetchArrivalTimes(routeId, stop.stop_id));
+      //dispatch(clearStops());
       dispatch(updateSelectedStop(stop));
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);

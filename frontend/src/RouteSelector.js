@@ -5,7 +5,7 @@ import {Toolbar, ToolbarGroup, ToolbarTitle} from "material-ui/Toolbar";
 import { hashHistory } from "react-router";
 import { toTitleCase } from "./utils/StringUtils.js";
 import { connect } from "react-redux";
-import { fetchStops, fetchRouteShapes, clearShapes } from "./store/ActionCreators";
+import { fetchStops, fetchRouteShapes, clearShapes, clearStops } from "./store/ActionCreators";
 import { Dimensions, Times } from "./utils/Constants";
 
 
@@ -17,6 +17,10 @@ class RouteSelector extends HeightResizingComponent {
     this.state = {
       height: `${window.innerHeight - Dimensions.APP_BAR_HEIGHT_PX}px`
     };
+  }
+
+  componentWillMount() {
+    this.props.clearStops();
   }
 
   createRoutes() {
@@ -93,6 +97,9 @@ const mapDispatchToProps = (dispatch) => {
     onRouteLeave: (routeId) => {
       const clearShapesAction = clearShapes(routeId);
       dispatch(clearShapesAction);
+    },
+    clearStops: () => {
+      dispatch(clearStops());
     }
   };
 };

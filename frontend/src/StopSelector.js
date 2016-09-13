@@ -32,7 +32,7 @@ class StopSelector extends HeightResizingComponent {
   }
 
   componentWillUnmount() {
-    this.props.clearStops();
+    //this.props.clearStops();
   }
 
   onStopEnter(stop) {
@@ -106,6 +106,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onStopClick: (routeId, stop) => {
       dispatch(fetchArrivalTimes(routeId, stop.stop_id));
+      //dispatch(clearStops());
       dispatch(updateSelectedStop(stop));
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);
