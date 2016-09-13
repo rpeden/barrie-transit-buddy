@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
 import { fetchArrivalTimes, updateSelectedStop,
-  updateHighlightedStop, clearHighlightedStop, clearStops } from "./store/ActionCreators";
+  updateHighlightedStop, clearHighlightedStop } from "./store/ActionCreators";
 
 
 class TransitMap extends Component {
@@ -182,8 +182,7 @@ class TransitMap extends Component {
             onMouseover={this.onStopMarkerHover.bind(this, stop)}
             onMouseout={this.onStopMarkerExit.bind(this)}
           />);
-      //const rawMarker = marker.getState().marker;
-      //rawMarker.setState({initialZIndex: zIndex});
+
       this.state.markers.set(stop.stop_id, { zIndex, marker: rawMarker });
       return marker;
     });
@@ -219,6 +218,7 @@ TransitMap.propTypes = {
   onStopClick: PropTypes.func.isRequired,
   selectedRoute: PropTypes.string.isRequired,
   highlightedStop: PropTypes.object,
+  busLocation: PropTypes.object,
   updateHighlightedStop: PropTypes.func.isRequired,
   clearHighlightedStop: PropTypes.func.isRequired
 };
@@ -228,7 +228,8 @@ const mapStateToProps = (state) => {
     shapes: state.app.shapes,
     stops: state.app.stops,
     selectedRoute: state.app.selectedRoute,
-    highlightedStop: state.app.highlightedStop
+    highlightedStop: state.app.highlightedStop,
+    busLocation: state.app.busLocation
     //view: state.view
   };
 };
@@ -237,7 +238,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onStopClick: (routeId, stop) => {
       dispatch(fetchArrivalTimes(routeId, stop.stop_id));
-      //dispatch(clearStops());
       dispatch(updateSelectedStop(stop));
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);

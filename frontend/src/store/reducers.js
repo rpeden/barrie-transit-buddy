@@ -42,6 +42,9 @@ export const transitApp = (state = initialState, action) => {
       stops: [action.selectedStop]}
     );
   }
+  if (action.type === actions.UPDATE_BUS_LOCATION) {
+    return Object.assign({}, state, { busLocation: action.busLocation });
+  }
   if (action.type === actions.UPDATE_HIGHLIGHTED_STOP) {
     return Object.assign({}, state, { highlightedStop: action.highlightedStop});
   }
@@ -53,6 +56,9 @@ export const transitApp = (state = initialState, action) => {
   }
   if (action.type === actions.CLEAR_SELECTED_ROUTE) {
     return Object.assign({}, state, { selectedRoute: null });
+  }
+  if (action.type === actions.CLEAR_BUS_LOCATION) {
+    return Object.assign({}, state, { busLocation: null });
   }
   if (action.type === actions.UPDATE_SHAPES) {
     return Object.assign({}, state, { shapes: action.shapes });

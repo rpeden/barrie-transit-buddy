@@ -23,7 +23,9 @@ export const actions = {
   UPDATE_HIGHLIGHTED_STOP: "UpdateHighlightedStop",
   CLEAR_SELECTED_ROUTE: "ClearSelctedRoute",
   CLEAR_SELECTED_STOP: "ClearSelectedStop",
-  CLEAR_HIGHLIGHTED_STOP: "ClearHighlightedStop"
+  CLEAR_HIGHLIGHTED_STOP: "ClearHighlightedStop",
+  UPDATE_BUS_LOCATION: "UpdateBusLocation",
+  CLEAR_BUS_LOCATION: "ClearBusLocation"
 };
 
 const updateArrivalTimes = (trips) => {
@@ -35,10 +37,14 @@ const updateArrivalTimes = (trips) => {
 };
 
 const listenForData = (tripId, stopNum) => {
-  socket.on("location", (data) => {
-    // eslint-disable-next-line no-console
-    console.log(`Trip location: ${JSON.stringify(data)}`);
-  });
+  // don't subscribe to bus location if running in react native
+  if (document) {
+    socket.on("location", (data) => {
+      // eslint-disable-next-line no-console
+      console.log(`Trip location: ${JSON.stringify(data)}`);
+    });
+  }
+
   socket.on(`${stopNum}/${tripId}`, (data) => {
     const bufferSize = 10;
     const trips = store.getState().app.arrivals;
