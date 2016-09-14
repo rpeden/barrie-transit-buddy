@@ -1,6 +1,6 @@
 import { Component, PropTypes } from "react";
 import React from "react";
-import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "react-google-maps";
+import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "../vendor/react-google-maps";
 import _ from "lodash";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
