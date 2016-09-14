@@ -24,9 +24,7 @@
     "eslint-plugin-react": "^6.2.0",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
-    "webpack": "^1.13.1",
-    "webpack-closure-compiler": "^2.0.2",
-    "webpack-dev-server": "^1.14.1"
+    "webpack": "^1.13.1"
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",

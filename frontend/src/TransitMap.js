@@ -8,7 +8,7 @@ import { Dimensions, Times } from "./utils/Constants";
 import { fetchArrivalTimes, updateSelectedStop,
   updateHighlightedStop, clearHighlightedStop } from "./store/ActionCreators";
 
-
+//location sample {"lat":44.3883056640625,"lon":-79.6924057006836}
 class TransitMap extends Component {
 
   constructor(props, context) {
@@ -36,10 +36,18 @@ class TransitMap extends Component {
     window.addEventListener("resize", this.handleWindowResize.bind(this));
   }
 
+  //eslint-disable-next-line
   componentWillReceiveProps(nextProps) {
     if (this.props.stops !== nextProps.stops) {
       this.clearMarkers();
       this.drawStopMarkers(nextProps.stops);
+    }
+
+    if (this.props.busLocation !== nextProps.busLocation) {
+      this.clearBusMarker();
+      if (nextProps.busLocation) {
+        this.drawBusMarker(nextProps.busLocation);
+      }
     }
 
     if (this.props.highlightedStop !== nextProps.highlightedStop) {
@@ -66,7 +74,8 @@ class TransitMap extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.stops !== nextProps.stops ||
            this.props.shapes !== nextProps.shapes ||
-           this.state.stopNameToShow !== nextState.stopNameToShow;
+           this.state.stopNameToShow !== nextState.stopNameToShow ||
+           this.props.busLocation !== nextProps.busLocation;
   }
 
   componentWillUnmount() {
@@ -103,6 +112,30 @@ class TransitMap extends Component {
       marker.setMap(null);
       delete this.state.markers[stopId];
     }
+  }
+
+  clearBusMarker() {
+    if (this.state.busMarker) {
+      this.state.busMarker.setMap(null);
+    }
+    this.setState({
+      busMarker: null
+    });
+  }
+
+  drawBusMarker(busLocation) {
+    const lat = busLocation.lat;
+    const lng = busLocation.lon;
+    const markerOptions = {
+      cursor: "pointer",
+      position: new google.maps.LatLng(lat, lng),
+      icon: "/img/bus.png",
+      map: this._googleMapComponent.getMap()
+    };
+    const marker = new google.maps.Marker(markerOptions);
+    this.setState({
+      busMarker: marker
+    });
   }
 
   renderStopName() {

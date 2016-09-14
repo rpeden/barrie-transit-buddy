@@ -42,6 +42,10 @@ const listenForData = (tripId, stopNum) => {
     socket.on("location", (data) => {
       // eslint-disable-next-line no-console
       console.log(`Trip location: ${JSON.stringify(data)}`);
+      store.dispatch({
+        type: actions.UPDATE_BUS_LOCATION,
+        busLocation: data
+      });
     });
   }
 
