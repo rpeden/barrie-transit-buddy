@@ -1,7 +1,7 @@
 class Trip < ActiveRecord::Base
 
 	def self.find_for_route_and_stop(route_id, stop_id, service_id)
-		current_time = (Time.now - 60).strftime("%H:%M:%S")
+		current_time = (Time.now - 600).strftime("%H:%M:%S")
 
 		self.find_by_sql ["select tr.trip_id, st.departure_time from stop_times as st
             inner join trips as tr on st.trip_id = tr.trip_id

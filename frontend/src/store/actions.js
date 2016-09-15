@@ -25,7 +25,8 @@ export const actions = {
   CLEAR_SELECTED_STOP: "ClearSelectedStop",
   CLEAR_HIGHLIGHTED_STOP: "ClearHighlightedStop",
   UPDATE_BUS_LOCATION: "UpdateBusLocation",
-  CLEAR_BUS_LOCATION: "ClearBusLocation"
+  CLEAR_BUS_LOCATION: "ClearBusLocation",
+  REMOVE_NEXT_ARRIVAL: "RemoveNextArrival"
 };
 
 const updateArrivalTimes = (trips) => {
@@ -36,17 +37,47 @@ const updateArrivalTimes = (trips) => {
   return updatedTrips;
 };
 
+const removeNextArrival = _.throttle(() => {
+  store.dispatch({
+    type: actions.REMOVE_NEXT_ARRIVAL
+  });
+  //the subscribe to the next trip location
+  const nextArrivals = store.getState().app.arrivals;
+  if (nextArrivals && !_.isEmpty(nextArrivals)) {
+    store.dispatch({
+      type: actions.SUBSCRIBE_TRIP_LOCATION,
+      tripId: _.head(nextArrivals).tripId
+    });
+  }
+}, 5000);
+
 const listenForData = (tripId, stopNum) => {
   // don't subscribe to bus location if running in react native
   if (document) {
-    socket.on("location", (data) => {
+    socket.on("location", _.throttle((data) => {
       // eslint-disable-next-line no-console
       console.log(`Trip location: ${JSON.stringify(data)}`);
+
+      const selectedStop = store.getState().app.selectedStop;
+      if (selectedStop.stop_sequence < data.stopSequence) {
+        //if the trip has passed this stop, first ubsub from trip location updates
+        store.dispatch({
+          type: actions.UNSUBSCRIBE_TRIP_LOCATION,
+          tripId
+        });
+        //then unsubscribe from delay trip-> stop delay updates
+        store.dispatch({
+          type: actions.UNSUBSCRIBE_STOP_ARRIVALS,
+          stopId: stopNum
+        });
+        //then remove the trip from the arrivals list
+        removeNextArrival();
+      }
       store.dispatch({
         type: actions.UPDATE_BUS_LOCATION,
         busLocation: data
       });
-    });
+    }), 5000);
   }
 
   socket.on(`${stopNum}/${tripId}`, (data) => {

@@ -106,7 +106,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onStopClick: (routeId, stop) => {
       dispatch(fetchArrivalTimes(routeId, stop.stop_id));
-      //dispatch(clearStops());
+      dispatch(clearStops());
       dispatch(updateSelectedStop(stop));
       setTimeout(() => {
         hashHistory.push(`/arrivals/${routeId}/${stop.stop_id}`);

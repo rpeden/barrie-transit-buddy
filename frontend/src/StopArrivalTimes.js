@@ -50,6 +50,7 @@ class StopArrivalTimes extends HeightResizingComponent {
     }
 
     this.props.clearStops();
+    this.props.clearBusLocation();
   }
 
   updateArrivalTimes(trips) {
@@ -185,6 +186,12 @@ const mapDispatchToProps = (dispatch) => {
     },
     clearStops: () => {
       dispatch(creators.clearStops());
+    },
+    clearBusLocation: () => {
+      dispatch(creators.clearBusLocation());
+    },
+    removeNextArrival: () => {
+      dispatch(creators.removeNextArrival());
     }
   };
 };
