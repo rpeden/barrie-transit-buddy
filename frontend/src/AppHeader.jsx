@@ -1,5 +1,5 @@
 import {default as React, PropTypes} from "react";
-import AppBar from "material-ui/AppBar";
+import AppBar from "../vendor/material-ui/AppBar";
 
 
 export default function appHeader(props) {

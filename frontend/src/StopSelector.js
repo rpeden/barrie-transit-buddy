@@ -1,8 +1,8 @@
 import React from "react";
-import {List, ListItem} from "material-ui/List";
-import {Toolbar, ToolbarGroup, ToolbarTitle} from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import NavigationArrowBack from "material-ui/svg-icons/navigation/arrow-back";
+import {List, ListItem} from "../vendor/material-ui/List";
+import {Toolbar, ToolbarGroup, ToolbarTitle} from "../vendor/material-ui/Toolbar";
+import IconButton from "../vendor/material-ui/IconButton";
+import NavigationArrowBack from "../vendor/material-ui/svg-icons/navigation/arrow-back";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";

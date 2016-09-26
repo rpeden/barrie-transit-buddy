@@ -1,10 +1,10 @@
 import React from "react";
 import {Table, TableBody, TableHeader
-        , TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table";
+        , TableHeaderColumn, TableRow, TableRowColumn } from "../vendor/material-ui/Table";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
-import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
-import IconButton from "material-ui/IconButton";
-import NavigationArrowBack from "material-ui/svg-icons/navigation/arrow-back";
+import {Toolbar, ToolbarGroup} from "../vendor/material-ui/Toolbar";
+import IconButton from "../vendor/material-ui/IconButton";
+import NavigationArrowBack from "../vendor/material-ui/svg-icons/navigation/arrow-back";
 import _ from "lodash";
 import { hashHistory } from "react-router";
 import { toMinutesFromNow, timeToLocalDate, pluralize } from "./utils/StringUtils";

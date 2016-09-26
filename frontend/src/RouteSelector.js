@@ -1,7 +1,7 @@
 import * as React from "react";
-import {List, ListItem} from "material-ui/List";
+import {List, ListItem} from "../vendor/material-ui/List";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
-import {Toolbar, ToolbarGroup, ToolbarTitle} from "material-ui/Toolbar";
+import {Toolbar, ToolbarGroup, ToolbarTitle} from "../vendor/material-ui/Toolbar";
 import { hashHistory } from "react-router";
 import { toTitleCase } from "./utils/StringUtils.js";
 import { connect } from "react-redux";

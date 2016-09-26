@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import store from "./store/store.js";
 
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import MuiThemeProvider from "../vendor/material-ui/styles/MuiThemeProvider";
 import TransitMap from "./TransitMap.js";
 import RouteSelector from "./RouteSelector.js";
 import StopSelector from "./StopSelector.js";
