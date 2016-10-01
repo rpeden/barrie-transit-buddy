@@ -1,4 +1,4 @@
-import {default as React, PropTypes} from "react";
+import React from "react";
 import AppBar from "../vendor/material-ui/AppBar";
 
 
@@ -11,5 +11,5 @@ export default function appHeader(props) {
 }
 
 appHeader.propTypes = {
-  title: PropTypes.string.isRequired
+  title: React.PropTypes.string.isRequired
 };

@@ -1,8 +1,8 @@
-import { Component } from "react";
+import React from "react";
 import { Dimensions, Times } from "./utils/Constants";
 import _ from "lodash";
 
-class HeightResizingComponent extends Component {
+class HeightResizingComponent extends React.Component {
 
   constructor(props, context) {
     super(props, context);

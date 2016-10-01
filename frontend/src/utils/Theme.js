@@ -1,5 +1,5 @@
-import getMuiTheme from "material-ui/styles/getMuiTheme";
-import { indigo500, indigo700 } from "material-ui/styles/colors";
+import getMuiTheme from "../../vendor/material-ui/styles/getMuiTheme";
+import { indigo500, indigo700 } from "../../vendor/material-ui/styles/colors";
 
 const muiTheme = getMuiTheme({
   palette: {

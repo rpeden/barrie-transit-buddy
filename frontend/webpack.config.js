@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-
+const CCP = require('webpack-closure-compiler');
 module.exports = {
     entry: './src/app.jsx',
     output: {
@@ -38,9 +38,29 @@ module.exports = {
               }
         }, { test: /\.json$/, loader: "json-loader" } */]
     },
-    //devtool: 'source-map'
+    /*resolve: {
+      alias: {
+        "react": "preact-compat",
+        "react-dom": "preact-compat",
+        "react-addons-transition-group": "preact-transition-group"
+      }
+    },*/
+    //devtool: 'source-map',
     plugins: [
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        /*new CCP({
+          compiler: {
+            "language_in": "ECMASCRIPT6",
+            "language_out": "ECMASCRIPT5_STRICT",
+            "compilation_level": "SIMPLE"
+          },
+          concurrency: 6
+        })*/
+        new webpack.DefinePlugin({
+          'process.env':{
+            'NODE_ENV': JSON.stringify('production')
+          }
+        }),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,

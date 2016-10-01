@@ -3,15 +3,6 @@ import getMuiTheme from './getMuiTheme';
 
 class MuiThemeProvider extends Component {
 
-  static propTypes = {
-    children: PropTypes.element,
-    muiTheme: PropTypes.object,
-  };
-
-  static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-  };
-
   getChildContext() {
     return {
       muiTheme: this.props.muiTheme || getMuiTheme(),
@@ -22,5 +13,14 @@ class MuiThemeProvider extends Component {
     return this.props.children;
   }
 }
+
+MuiThemeProvider.propTypes = {
+  children: PropTypes.element,
+  muiTheme: PropTypes.object,
+};
+
+MuiThemeProvider.childContextTypes = {
+  muiTheme: PropTypes.object.isRequired,
+};
 
 export default MuiThemeProvider;

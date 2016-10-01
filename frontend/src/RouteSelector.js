@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {List, ListItem} from "../vendor/material-ui/List";
 import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import {Toolbar, ToolbarGroup, ToolbarTitle} from "../vendor/material-ui/Toolbar";

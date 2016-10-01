@@ -1,4 +1,3 @@
-import { Component, PropTypes } from "react";
 import React from "react";
 import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "../vendor/react-google-maps";
 import _ from "lodash";
@@ -7,9 +6,10 @@ import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
 import { fetchArrivalTimes, updateSelectedStop,
   updateHighlightedStop, clearHighlightedStop } from "./store/ActionCreators";
+const PropTypes = React.PropTypes;
 
 //location sample {"lat":44.3883056640625,"lon":-79.6924057006836}
-class TransitMap extends Component {
+class TransitMap extends React.Component {
 
   constructor(props, context) {
     super(props, context);
@@ -47,6 +47,8 @@ class TransitMap extends Component {
       this.clearBusMarker();
       if (nextProps.busLocation) {
         this.drawBusMarker(nextProps.busLocation);
+      } else {
+        this.clearBusMarker();
       }
     }
 
