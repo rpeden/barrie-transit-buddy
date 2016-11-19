@@ -15,10 +15,10 @@ import { Provider } from "react-redux";
 import { syncHistoryWithStore } from "react-router-redux";
 
 
-import injectTapEventPlugin from "react-tap-event-plugin";
+//import injectTapEventPlugin from "react-tap-event-plugin";
 import theme from "./utils/Theme.js";
 
-injectTapEventPlugin();
+//injectTapEventPlugin();
 
 const Container = () => {
   const style = {
