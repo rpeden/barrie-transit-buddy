@@ -107,11 +107,17 @@ class TransitMap extends Component {
 
   clearMarkers() {
     // eslint-disable-next-line
-    for (const stopId of Object.keys(this.state.markers)) {
-      const marker = this.state.markers[stopId].marker;
+    for (let [stopId, markerObj] of Object.entries(this.state.markers)) {
+      const marker = markerObj.marker;
       marker.setMap(null);
       delete this.state.markers[stopId];
     }
+    //this.setState("markers", "");
+    /*for (const stopId of Object.keys(this.state.markers)) {
+      const marker = this.state.markers[stopId].marker;
+      marker.setMap(null);
+      delete this.state.markers[stopId];
+    }*/
   }
 
   clearBusMarker() {
@@ -178,6 +184,9 @@ class TransitMap extends Component {
 
   drawStopMarkers(newStops) {
     newStops.map((stop, idx) => {
+      if (this.state.markers[stop.stop_id]) {
+        return;
+      }
       const lat = stop.stop_lat;
       const lng = stop.stop_lon;
       const markerOptions = {

@@ -3,7 +3,7 @@ import { toMinutesFromNow, timeToLocalDate } from "../utils/StringUtils";
 //import { throttle, head, isEmpty, find, take, mean } from "lodash";
 import throttle from "lodash.throttle";
 import head from "lodash.head";
-import isEmpty from "lodash.isEmpty";
+import isEmpty from "lodash.isempty";
 import find from "lodash.find";
 import take from "lodash.take";
 import mean from "lodash.mean";
@@ -92,7 +92,16 @@ const listenForData = (tripId, stopNum) => {
     const arrival = JSON.parse(data);
     const trip = find(trips, (t) => t.tripId === tripId);
     const rest = trips.filter((t) => t.tripId !== tripId);
-
+    console.log(arrival);
+    if (arrival.dataMissing) {
+      console.log("missing");
+      store.dispatch({
+        type: actions.UPDATE_ARRIVAL_TIMES,
+        arrivals: updateArrivalTimes(rest)
+      });
+      return;
+    }
+    //check if first trip in list has come and gone, and remove it if so
     if (!trip.hasOwnProperty("delays")) {
       trip.delays = [];
     }
@@ -137,7 +146,7 @@ export const fetchArrivalTimes = (routeId, stopId) => {
   fetch(arrivalsUrl).then((data) => {
     return data.json();
   }).then((trips) => {
-    const tripsToShowCount = 5;
+    const tripsToShowCount = 7;
     let filteredTrips = take(trips, tripsToShowCount);
     filteredTrips = filteredTrips.map((trip) => {
       const scheduledTime =
@@ -146,10 +155,11 @@ export const fetchArrivalTimes = (routeId, stopId) => {
       return {
         scheduledString: trip.departure_time,
         scheduledDepartureTime: scheduledTime,
+        secondsToDeparture: trip.seconds_to_departure,
         departureTime: scheduledTime,
         tripId: trip.trip_id
       };
-    })
+    });
 
     if (!isEmpty(trips)) {
       store.dispatch({
@@ -192,8 +202,8 @@ export const fetchShapesForRoute = (shapeId) => {
 };
 window.fetchShapes = fetchShapesForRoute;
 
-export const subscribeToStop = (stopId) => {
-  socket.emit("stop-subscribe", stopId);
+export const subscribeToStop = (stopId, tripId) => {
+  socket.emit("stop-subscribe", stopId, tripId);
 };
 
 export const subscribeToTripLocation = (tripId) => {

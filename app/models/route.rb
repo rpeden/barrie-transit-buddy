@@ -14,7 +14,7 @@ class Route < ActiveRecord::Base
 	end
 
 	def self.find_stops_for_route(route_id)
-		#filtering by departure_time after 7, because some early morning trips on some routes
+		#filtering by departure_time after 9, because some early morning trips on some routes
 		#start mid-way thru the stop list, and failing to filter these out results in duplicate
 		#stops
 		self.find_by_sql ["select distinct stops.stop_id, stop_name, stop_lat, stop_lon, st.stop_sequence
@@ -26,7 +26,8 @@ class Route < ActiveRecord::Base
 					    inner join routes as rt
 					    on tr.route_id = rt.route_id
 					    where rt.route_id = ?
-							and st.departure_time > '08:00:00'
-							order by st.stop_sequence", route_id]
+							and st.departure_time > '11:00:00'
+							and st.departure_time < '16:00:00'
+							order by st.stop_sequence asc", route_id]
 	end
 end

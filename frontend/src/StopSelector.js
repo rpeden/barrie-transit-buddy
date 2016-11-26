@@ -10,7 +10,7 @@ import { fetchArrivalTimes, clearStops,
   fetchStops, updateSelectedStop, clearSelectedStop, updateHighlightedStop,
    clearHighlightedStop } from "./store/ActionCreators";
 import { Times } from "./utils/Constants";
-import isEmpty from "lodash.isEmpty";
+import isEmpty from "lodash.isempty";
 
 
 class StopSelector extends HeightResizingComponent {

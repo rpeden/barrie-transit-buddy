@@ -5,7 +5,7 @@ import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import {Toolbar, ToolbarGroup} from "../vendor/material-ui/Toolbar";
 import IconButton from "../vendor/material-ui/IconButton";
 import NavigationArrowBack from "../vendor/material-ui/svg-icons/navigation/arrow-back";
-import isEmpty from "lodash.isEmpty";
+import isEmpty from "lodash.isempty";
 import head from "lodash.head";
 import mean from "lodash.mean";
 import { hashHistory } from "react-router";
@@ -32,10 +32,11 @@ class StopArrivalTimes extends HeightResizingComponent {
     const stopId = this.props.params.stopId;
     this.arrivalsUrl = (`/routes/${routeId}/stops/${stopId}/trips`);
 
-    this.props.subscribeToStop(this.props.params.stopId);
+    this.props.subscribeToStop(this.props.params.stopId, undefined);
     if (this.props.arrivals && !isEmpty(this.props.arrivals)) {
       const nextTripId = head(this.props.arrivals).tripId;
       this.props.subscribeToTripLocation(nextTripId);
+      this.props.subscribeToStop(this.props.params.stopId, nextTripId);
     }
   }
 
