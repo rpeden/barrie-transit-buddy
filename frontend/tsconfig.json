@@ -1,10 +1,20 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2015",
     "moduleResolution": "node",
     "target": "es6",
     "sourceMap": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": [
+      "history",
+      "material-ui",
+      "react",
+      "react-dom",
+      "react-router",
+      "redux",
+      "lodash",
+      "moment"
+    ]
   },
   "exclude": [
     "node_modules"

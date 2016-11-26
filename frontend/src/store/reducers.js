@@ -1,7 +1,7 @@
 import { actions, fetchStopsForRoute, fetchArrivalTimes, fetchShapesForRoute,
          subscribeToStop, unsubscribeFromStop, subscribeToTripLocation,
          unsubscribeFromTripLocation } from "./actions.js";
-import _ from "lodash";
+import tail  from "lodash.tail";
 
 const initialState = {
   routes: window.routes,
@@ -79,7 +79,7 @@ export const transitApp = (state = initialState, action) => {
     unsubscribeFromTripLocation(action.tripId);
   }
   if (action.type === actions.REMOVE_NEXT_ARRIVAL) {
-    return Object.assign({}, state, { arrivals: _.tail(state.arrivals) });
+    return Object.assign({}, state, { arrivals: tail(state.arrivals) });
   }
   return state;
 };

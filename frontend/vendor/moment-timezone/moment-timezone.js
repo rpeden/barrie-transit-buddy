@@ -4,24 +4,14 @@
 //! license : MIT
 //! github.com/moment/moment-timezone
 
-(function (root, factory) {
-	"use strict";
+import moment from 'moment';
 
-	/*global define*/
-	if (typeof define === 'function' && define.amd) {
-		define(['moment'], factory);                 // AMD
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = factory(require('moment')); // Node
-	} else {
-		factory(root.moment);                        // Browser
-	}
-}(this, function (moment) {
 	"use strict";
 
 	// Do not load moment-timezone a second time.
 	if (moment.tz !== undefined) {
 		logError('Moment Timezone ' + moment.tz.version + ' was already loaded ' + (moment.tz.dataVersion ? 'with data from ' : 'without any data') + moment.tz.dataVersion);
-		return moment;
+		//return moment;
 	}
 
 	var VERSION = "0.5.5",
@@ -581,7 +571,7 @@
 			logError('Moment Timezone setDefault() requires Moment.js >= 2.9.0. You are using Moment.js ' + moment.version + '.');
 		}
 		moment.defaultZone = name ? getZone(name) : null;
-		return moment;
+		//return moment;
 	};
 
 	// Cloning a moment should include the _z property.
@@ -597,5 +587,5 @@
 
 	// INJECT DATA
 
-	return moment;
-}));
+export default moment;
+

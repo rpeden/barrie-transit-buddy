@@ -5,7 +5,9 @@ import HeightResizingComponent from "./HeightResizingComponent.jsx";
 import {Toolbar, ToolbarGroup} from "../vendor/material-ui/Toolbar";
 import IconButton from "../vendor/material-ui/IconButton";
 import NavigationArrowBack from "../vendor/material-ui/svg-icons/navigation/arrow-back";
-import _ from "lodash";
+import isEmpty from "lodash.isEmpty";
+import head from "lodash.head";
+import mean from "lodash.mean";
 import { hashHistory } from "react-router";
 import { toMinutesFromNow, timeToLocalDate, pluralize } from "./utils/StringUtils";
 import * as creators from "./store/ActionCreators";
@@ -31,8 +33,8 @@ class StopArrivalTimes extends HeightResizingComponent {
     this.arrivalsUrl = (`/routes/${routeId}/stops/${stopId}/trips`);
 
     this.props.subscribeToStop(this.props.params.stopId);
-    if (this.props.arrivals && !_.isEmpty(this.props.arrivals)) {
-      const nextTripId = _.head(this.props.arrivals).tripId;
+    if (this.props.arrivals && !isEmpty(this.props.arrivals)) {
+      const nextTripId = head(this.props.arrivals).tripId;
       this.props.subscribeToTripLocation(nextTripId);
     }
   }
@@ -44,8 +46,8 @@ class StopArrivalTimes extends HeightResizingComponent {
   componentWillUnmount() {
     this.props.unsubscribeFromStop(this.props.params.stopId);
 
-    if (this.props.arrivals && !_.isEmpty(this.props.arrivals)) {
-      const nextTripId = _.head(this.props.arrivals).tripId;
+    if (this.props.arrivals && !isEmpty(this.props.arrivals)) {
+      const nextTripId = head(this.props.arrivals).tripId;
       this.props.unsubscribeFromTripLocation(nextTripId);
     }
 
@@ -67,7 +69,7 @@ class StopArrivalTimes extends HeightResizingComponent {
 
       const allowableDelaySeconds = 29;
       if (trip.delays) {
-        const bufferedDelay = _.mean(trip.delays);
+        const bufferedDelay = mean(trip.delays);
         const onTime = (bufferedDelay >= -(allowableDelaySeconds)) &&
                        (bufferedDelay <= allowableDelaySeconds);
         const early = bufferedDelay < -(allowableDelaySeconds);

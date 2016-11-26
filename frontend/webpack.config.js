@@ -1,3 +1,4 @@
+/* eslint-disable */
 const webpack = require('webpack');
 
 module.exports = {
@@ -13,20 +14,24 @@ module.exports = {
               exclude: /node_modules/,
               loaders: [
                 {
-                  loader: 'babel',
+                  loader: 'babel-loader',
                   query:
                     {
                       comments: false,
-                      presets:['es2015-native-modules','stage-1','stage-0','react']
+                      presets:[["es2015", { "modules": false }],'stage-1','stage-0','react']
                     }
                 }
               ]
             },
             {
               test: /\.json$/,
-              loaders: [ { loader: 'json' } ]
+              loaders: [ { loader: 'json-loader' } ]
+            },
+            /*{
+                test: /\.tsx?/,
+                loader: "ts-loader"
             }
-            /*
+
             {
             test: /\.jsx?$/,
             exclude: /node_modules/,
@@ -40,14 +45,19 @@ module.exports = {
     },
     //devtool: 'source-map'
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env':{
+                'NODE_ENV': JSON.stringify('production')
+            }
+        }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        new webpack.optimize.UglifyJsPlugin({
+        /*new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,
             },
             output: {
                 comments: false,
             },
-        }),
+        })*/
     ]
 }

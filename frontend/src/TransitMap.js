@@ -1,7 +1,7 @@
+import * as React from "react";
 import { Component, PropTypes } from "react";
-import React from "react";
 import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "../vendor/react-google-maps";
-import _ from "lodash";
+import throttle from "lodash.throttle";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Dimensions, Times } from "./utils/Constants";
@@ -13,7 +13,7 @@ class TransitMap extends Component {
 
   constructor(props, context) {
     super(props, context);
-    this.handleWindowResize = _.throttle(this.handleWindowResize, Times.RESIZE_THROTTLE_MS);
+    this.handleWindowResize = throttle(this.handleWindowResize, Times.RESIZE_THROTTLE_MS);
 
     this.state = {
       width: `${window.innerWidth - Dimensions.SIDE_BAR_WIDTH_PX}px`,

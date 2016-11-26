@@ -1,13 +1,13 @@
 import { Component } from "react";
 import { Dimensions, Times } from "./utils/Constants";
-import _ from "lodash";
+import throttle from "lodash.throttle";
 
 class HeightResizingComponent extends Component {
 
   constructor(props, context) {
     super(props, context);
 
-    this.handleResize = _.throttle(this.handleResize, Times.RESIZE_THROTTLE_MS);
+    this.handleResize = throttle(this.handleResize, Times.RESIZE_THROTTLE_MS);
   }
 
   handleResize() {

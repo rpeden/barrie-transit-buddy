@@ -1,6 +1,12 @@
 import store from "./store.js";
 import { toMinutesFromNow, timeToLocalDate } from "../utils/StringUtils";
-import _ from "lodash";
+//import { throttle, head, isEmpty, find, take, mean } from "lodash";
+import throttle from "lodash.throttle";
+import head from "lodash.head";
+import isEmpty from "lodash.isEmpty";
+import find from "lodash.find";
+import take from "lodash.take";
+import mean from "lodash.mean";
 import socket from "../SocketIO.js";
 import ShapeCache from "../utils/ShapeCache.js";
 import { Times } from "../utils/Constants.js";
@@ -37,16 +43,16 @@ const updateArrivalTimes = (trips) => {
   return updatedTrips;
 };
 
-const removeNextArrival = _.throttle(() => {
+const removeNextArrival = throttle(() => {
   store.dispatch({
     type: actions.REMOVE_NEXT_ARRIVAL
   });
   //the subscribe to the next trip location
   const nextArrivals = store.getState().app.arrivals;
-  if (nextArrivals && !_.isEmpty(nextArrivals)) {
+  if (nextArrivals && !isEmpty(nextArrivals)) {
     store.dispatch({
       type: actions.SUBSCRIBE_TRIP_LOCATION,
-      tripId: _.head(nextArrivals).tripId
+      tripId: head(nextArrivals).tripId
     });
   }
 }, 5000);
@@ -54,7 +60,7 @@ const removeNextArrival = _.throttle(() => {
 const listenForData = (tripId, stopNum) => {
   // don't subscribe to bus location if running in react native
   if (document) {
-    socket.on("location", _.throttle((data) => {
+    socket.on("location", throttle((data) => {
       // eslint-disable-next-line no-console
       console.log(`Trip location: ${JSON.stringify(data)}`);
 
@@ -84,20 +90,20 @@ const listenForData = (tripId, stopNum) => {
     const bufferSize = 10;
     const trips = store.getState().app.arrivals;
     const arrival = JSON.parse(data);
-    const trip = _.find(trips, (t) => t.tripId === tripId);
-    const rest = _.filter(trips, (t) => t.tripId !== tripId);
+    const trip = find(trips, (t) => t.tripId === tripId);
+    const rest = trips.filter((t) => t.tripId !== tripId);
 
     if (!trip.hasOwnProperty("delays")) {
       trip.delays = [];
     }
     if (trip.delays.length >= bufferSize) {
-      trip.delays = _.take(trip.delays, bufferSize);
+      trip.delays = take(trip.delays, bufferSize);
     }
 
     trip.delays.push(arrival.delay || Times.DEFAULT_DELAY_SECONDS);
 
     const departureTime = timeToLocalDate(trip.scheduledString);
-    departureTime.add(_.mean(trip.delays), "seconds");
+    departureTime.add(mean(trip.delays), "seconds");
 
     const diffString = toMinutesFromNow(departureTime);
 
@@ -132,26 +138,25 @@ export const fetchArrivalTimes = (routeId, stopId) => {
     return data.json();
   }).then((trips) => {
     const tripsToShowCount = 5;
-    const filteredTrips = _.chain(trips)
-              .take(tripsToShowCount)
-              .map((trip) => {
-                const scheduledTime =
-                      toMinutesFromNow(timeToLocalDate(trip.departure_time));
+    let filteredTrips = take(trips, tripsToShowCount);
+    filteredTrips = filteredTrips.map((trip) => {
+      const scheduledTime =
+            toMinutesFromNow(timeToLocalDate(trip.departure_time));
 
-                return {
-                  scheduledString: trip.departure_time,
-                  scheduledDepartureTime: scheduledTime,
-                  departureTime: scheduledTime,
-                  tripId: trip.trip_id
-                };
-              }).value();
+      return {
+        scheduledString: trip.departure_time,
+        scheduledDepartureTime: scheduledTime,
+        departureTime: scheduledTime,
+        tripId: trip.trip_id
+      };
+    })
 
-    if (!_.isEmpty(trips)) {
+    if (!isEmpty(trips)) {
       store.dispatch({
         type: actions.UPDATE_ARRIVAL_TIMES,
         arrivals: filteredTrips
       });
-      listenForData(_.head(trips).trip_id, stopId);
+      listenForData(head(trips).trip_id, stopId);
     }
   });
 };
@@ -178,7 +183,7 @@ export const fetchShapesForRoute = (shapeId) => {
     const shapesUrl = `/routes/${shapeId}/shapes.json`;
     fetch(shapesUrl).then((data) => data.json())
             .then((shapes) => {
-              if (!_.isEmpty(shapes)) {
+              if (!isEmpty(shapes)) {
                 shapeCache.set(shapeId, shapes);
                 updateShapes(shapes);
               }
