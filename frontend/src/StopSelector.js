@@ -46,7 +46,7 @@ class StopSelector extends HeightResizingComponent {
   createStopList() {
     const routeId = this.props.params.routeId;
     return this.props.stops.map((stop) => {
-      return (<ListItem key={stop.stop_id}
+      return (<ListItem key={stop.stop_sequence}
         primaryText={`${stop.stop_id}  -  ${stop.stop_name}`}
         onClick={() => { this.props.onStopClick(routeId, stop); }}
         onMouseOver={this.onStopEnter.bind(this, stop)}

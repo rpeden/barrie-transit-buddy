@@ -59,7 +59,9 @@ const TextFieldUnderline = (props) => {
     style,
   } = props;
 
-  const {color: errorStyleColor} = errorStyle;
+  const {
+    color: errorStyleColor,
+  } = errorStyle;
 
   const {
     prepareStyles,
@@ -85,7 +87,6 @@ const TextFieldUnderline = (props) => {
     disabled: {
       borderBottom: 'dotted 2px',
       borderColor: disabledTextColor,
-      cursor: 'not-allowed',
     },
     focus: {
       borderBottom: 'solid 2px',

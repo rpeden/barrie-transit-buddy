@@ -79,7 +79,7 @@ export default class GoogleMapHolder extends Component {
         {Children.map(this.props.children, (childElement) => {
           if (React.isValidElement(childElement)) {
             return React.cloneElement(childElement, {
-              mapHolderRef: this,
+              //mapHolderRef: this,
             });
           } else {
             return childElement;

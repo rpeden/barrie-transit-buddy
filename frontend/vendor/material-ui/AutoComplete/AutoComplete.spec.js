@@ -61,7 +61,7 @@ describe('<AutoComplete />', () => {
     });
   });
 
-  describe('props: onNewRequest', () => {
+  describe('prop: onNewRequest', () => {
     it('should call onNewRequest once the popover is closed', (done) => {
       const handleNewRequest = spy();
       const wrapper = shallowWithContext(
@@ -82,24 +82,69 @@ describe('<AutoComplete />', () => {
 
       setTimeout(() => {
         assert.strictEqual(handleNewRequest.callCount, 1);
+        assert.deepEqual(handleNewRequest.args[0], [
+          'foo',
+          0,
+        ]);
         assert.strictEqual(wrapper.state().searchText, 'foo');
         done();
       }, 20);
     });
   });
 
-  describe('props: popoverProps', () => {
+  describe('prop: onUpdateInput', () => {
+    it('should not fire after selection from menu', (done) => {
+      const handleUpdateInput = spy();
+      const wrapper = shallowWithContext(
+        <AutoComplete
+          dataSource={['foo', 'bar']}
+          searchText="f"
+          onUpdateInput={handleUpdateInput}
+          menuCloseDelay={10}
+        />
+      );
+
+      wrapper.setState({open: true});
+      wrapper.find(Menu).props().onItemTouchTap({}, {
+        key: 0,
+      });
+      assert.strictEqual(wrapper.state().searchText, 'f');
+
+      setTimeout(() => {
+        assert.strictEqual(handleUpdateInput.callCount, 0);
+        assert.strictEqual(wrapper.state().searchText, 'foo');
+        done();
+      }, 20);
+    });
+  });
+
+  describe('prop: popoverProps', () => {
     it('should pass popoverProps to Popover', () => {
       const wrapper = shallowWithContext(
         <AutoComplete
           dataSource={['foo', 'bar']}
           popoverProps={{
             zDepth: 3,
+            canAutoPosition: true,
           }}
         />
       );
 
-      assert.strictEqual(wrapper.find(Popover).prop('zDepth'), 3, 'should pass popoverProps to Popover');
+      const popoverProps = wrapper.find(Popover).props();
+
+      assert.strictEqual(popoverProps.zDepth, 3, 'should pass popoverProps to Popover');
+      assert.strictEqual(popoverProps.canAutoPosition, true, 'should overrides the default');
+    });
+  });
+
+  describe('prop: onClose', () => {
+    it('should call onClose when the menu is closed', () => {
+      const handleClose = spy();
+      const wrapper = shallowWithContext(
+        <AutoComplete dataSource={['foo', 'bar']} onClose={handleClose} />
+      );
+      wrapper.instance().close();
+      assert.strictEqual(handleClose.callCount, 1);
     });
   });
 });

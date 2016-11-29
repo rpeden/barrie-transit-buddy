@@ -122,6 +122,10 @@ class AutoComplete extends Component {
     menuStyle: PropTypes.object,
     /** @ignore */
     onBlur: PropTypes.func,
+    /**
+     * Callback function fired when the menu is closed.
+     */
+    onClose: PropTypes.func,
     /** @ignore */
     onFocus: PropTypes.func,
     /** @ignore */
@@ -234,6 +238,10 @@ class AutoComplete extends Component {
       open: false,
       anchorEl: null,
     });
+
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
   }
 
   handleRequestClose = () => {
@@ -383,13 +391,19 @@ class AutoComplete extends Component {
       menuProps,
       listStyle,
       targetOrigin,
+      onClose, // eslint-disable-line no-unused-vars
       onNewRequest, // eslint-disable-line no-unused-vars
       onUpdateInput, // eslint-disable-line no-unused-vars
       openOnFocus, // eslint-disable-line no-unused-vars
       popoverProps,
       searchText: searchTextProp, // eslint-disable-line no-unused-vars
-      ...other,
+      ...other
     } = this.props;
+
+    const {
+      style: popoverStyle,
+      ...popoverOther
+    } = popoverProps || {};
 
     const {
       open,
@@ -496,8 +510,7 @@ class AutoComplete extends Component {
           style={textFieldStyle}
         />
         <Popover
-          {...popoverProps}
-          style={styles.popover}
+          style={Object.assign({}, styles.popover, popoverStyle)}
           canAutoPosition={false}
           anchorOrigin={anchorOrigin}
           targetOrigin={targetOrigin}
@@ -507,6 +520,7 @@ class AutoComplete extends Component {
           onRequestClose={this.handleRequestClose}
           animated={animated}
           animation={animation}
+          {...popoverOther}
         >
           {menu}
         </Popover>

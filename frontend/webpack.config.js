@@ -43,7 +43,7 @@ module.exports = {
               }
         }, { test: /\.json$/, loader: "json-loader" } */]
     },
-    devtool: 'source-map',
+    devtool: 'cheap-eval-source-map',
     plugins: [
         /*new webpack.DefinePlugin({
             'process.env':{
