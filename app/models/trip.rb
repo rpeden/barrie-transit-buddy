@@ -1,4 +1,7 @@
 class Trip < ActiveRecord::Base
+	self.primary_key = 'trip_id'
+  belongs_to :route
+	has_many :stop_times
 
 	def self.find_for_route_and_stop(route_id, stop_id, service_id)
 		current_time = (Time.now - 600).strftime("%H:%M:%S")

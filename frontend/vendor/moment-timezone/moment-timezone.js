@@ -588,4 +588,3 @@ import moment from 'moment';
 	// INJECT DATA
 
 export default moment;
-

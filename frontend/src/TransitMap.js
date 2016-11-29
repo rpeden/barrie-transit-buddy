@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component, PropTypes } from "react";
-import { GoogleMapLoader, GoogleMap, Polyline, Marker } from "../vendor/react-google-maps";
+import { GoogleMapLoader, GoogleMap, Polyline, Marker, withGoogleMap } from "../vendor/react-google-maps";
 import throttle from "lodash.throttle";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
@@ -231,24 +231,29 @@ class TransitMap extends Component {
   }
 
   render() {
+    const BTMap = withGoogleMap(props => (
+      <GoogleMap
+        ref={props.onMapLoad}
+        defaultZoom={13}
+        defaultCenter={{ lat: 44.389, lng: -79.688 }}
+        //onClick={() => {}}
+      >
+        <Polyline path={this.props.shapes}
+          options={{geodesic: true, strokeColor: "#3366ff",
+                    strokeOpacity: 0.7, strokeWeight: 4}}
+        />
+        {this.renderStopName()}
+      </GoogleMap>
+    ));
     return (
-      <GoogleMapLoader
+      <BTMap
         containerElement={
-          <div style={{ height: this.state.height, width: this.state.width }} />}
-        googleMapElement={
-          <GoogleMap
-            ref={(map) => (this._googleMapComponent = map) /*&& console.log(map.getZoom())*/}
-            defaultZoom={13}
-            defaultCenter={{ lat: 44.389, lng: -79.688 }}
-            //onClick={() => {}}
-          >
-            <Polyline path={this.props.shapes}
-              options={{geodesic: true, strokeColor: "#3366ff",
-                        strokeOpacity: 0.7, strokeWeight: 4}}
-            />
-            {this.renderStopName()}
-          </GoogleMap>
+          <div style={{ height: `100%`, width: "100%" }} />
         }
+        mapElement={
+          <div style={{ height: `100%`, width: "100%" }} />
+        }
+        markers={this.state.markers}
       />
     );
   }

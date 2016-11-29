@@ -5,7 +5,6 @@ import ReactDOM from "react-dom";
 import store from "./store/store.js";
 
 import MuiThemeProvider from "../vendor/material-ui/styles/MuiThemeProvider";
-import TransitMap from "./TransitMap.js";
 import RouteSelector from "./RouteSelector.js";
 import StopSelector from "./StopSelector.js";
 import StopArrivalTimes from "./StopArrivalTimes.js";
@@ -39,7 +38,6 @@ const Container = () => {
               <Route path="/stops/:routeId/:routeName" component={StopSelector} />
             </Router>
             </div>
-            <TransitMap />
           </div>
         </div>
     </Provider>

@@ -43,14 +43,14 @@ module.exports = {
               }
         }, { test: /\.json$/, loader: "json-loader" } */]
     },
-    devtool: 'cheap-eval-source-map',
+    devtool: 'source-map',
     plugins: [
-        /*new webpack.DefinePlugin({
+        new webpack.DefinePlugin({
             'process.env':{
                 'NODE_ENV': JSON.stringify('production')
             }
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
         /*new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false,

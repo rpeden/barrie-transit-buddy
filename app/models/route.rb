@@ -1,5 +1,5 @@
 class Route < ActiveRecord::Base
-	belongs_to :stop_times
+	has_many :trips
 
 	def self.find_routes_for_stop(stop_id)
 		self.find_by_sql ["select distinct rt.route_id, rt.route_long_name
