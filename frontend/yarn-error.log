@@ -1,0 +1,77 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Ryan\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js
+
+PATH: 
+  C:\Devtools\Cmder\bin;C:\Program Files\Git\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\share\vim\vim74;C:\Devtools\Cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Devtools\Cmder\vendor\conemu-maximus5;C:\Devtools\Cmder\vendor\conemu-maximus5\ConEmu;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Users\Ryan\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Git\cmd;C:\Devtools\Cmder;C:\Program Files\Java\jdk1.8.0_77\bin;C:\Devtools\php\php7;D:\Program Files\MariaDB 10.1\bin;C:\Devtools\qb64;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files (x86)\Common Files\GTK\2.0\bin;C:\sbcl\;C:\tools\python2;C:\Users\Ryan\AppData\Local\Android\Sdk\platform-tools;C:\Program Files (x86)\Microsoft Emulator Manager\1.0\;C:\Devtools\gradle\bin;C:\Program Files (x86)\sbt\\bin;C:\Program Files (x86)\scala\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\nodejs\;C:\devtools\jsil;C:\Program Files\dotnet\;C:\Users\Ryan\AppData\Local\Programs\Python\Python35-32\Scripts\;C:\Users\Ryan\AppData\Local\Programs\Python\Python35-32\;c:\jruby-9.1.2.0\bin;C:\Program Files (x86)\Microsoft VS Code\bin;C:\clisp;c:\devtools\protobuf;C:\Program Files\Mercurial;D:\Program Files\Docker Toolbox;C:\ProgramData\chocolatey\bin;C:\Users\Ryan\.lein\bin;C:\Users\Ryan\AppData\Local\Microsoft\WindowsApps;C:\Users\Ryan\AppData\Roaming\npm;C:\Users\Ryan\AppData\Local\atom\bin;C:\Devtools\Cmder
+
+Yarn version: 
+  0.17.4
+
+Node version: 
+  6.5.0
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "webpack-test",
+    "version": "1.0.0",
+    "description": "testing webpack",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "eslint": "eslint ."
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "babel-core": "^6.14.0",
+      "babel-eslint": "^6.1.2",
+      "babel-loader": "^6.2.5",
+      "babel-plugin-transform-decorators-legacy": "^1.3.4",
+      "babel-preset-es2015": "^6.14.0",
+      "babel-preset-es2015-native-modules": "^6.9.4",
+      "babel-preset-react": "^6.11.1",
+      "babel-preset-stage-0": "^6.5.0",
+      "babel-preset-stage-1": "^6.13.0",
+      "eslint": "^3.4.0",
+      "eslint-config-walmart": "^1.0.1",
+      "eslint-plugin-filenames": "^1.1.0",
+      "eslint-plugin-react": "^6.2.0",
+      "ts-loader": "^0.8.2",
+      "typescript": "^1.8.10",
+      "webpack": "^2.1.0-beta.25"
+    },
+    "dependencies": {
+      "babel-polyfill": "^6.13.0",
+      "inversify": "^2.0.0-rc.9",
+      "jquery": "^3.1.0",
+      "json-loader": "^0.5.4",
+      "lodash": "^4.15.0",
+      "material-ui": "^0.15.4",
+      "moment": "^2.14.1",
+      "moment-round": "^1.0.1",
+      "react": "^15.3.0",
+      "react-dom": "^15.3.0",
+      "react-google-maps": "^4.11.0",
+      "react-redux": "^4.4.5",
+      "react-router": "^2.6.1",
+      "react-router-redux": "^4.0.5",
+      "react-tap-event-plugin": "^1.0.0",
+      "redux": "^3.5.2",
+      "reflect-metadata": "^0.1.8",
+      "socket.io-client": "^1.4.8",
+      "whatwg-fetch": "^1.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'D:\Projects\barrie-transit-buddy\frontend\node_modules\.yarn-integrity'
+      at Error (native)
